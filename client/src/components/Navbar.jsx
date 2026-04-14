@@ -12,7 +12,7 @@ const Navbar = () => {
 
 
     return (
-        <nav className="bg-white shadow-sm">
+        <nav className="bg-white shadow-sm sticky top-0">
             {/* Top Row */}
             <div className='max-w-5xl mx-auto flex justify-between items-center border-b border-gray-300 px-6 py-4'>
 
