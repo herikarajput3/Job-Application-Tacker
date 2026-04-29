@@ -1,141 +1,85 @@
-import React, { useState } from 'react'
-import { FaAward, FaBriefcase, FaUserTimes } from 'react-icons/fa'
-import { FaUserTie } from 'react-icons/fa6'
+import React from 'react'
+import StatCard from '../../components/StatCard';
+import { FaAward, FaBriefcase, FaUserTie } from 'react-icons/fa';
 
 const Dashboard = () => {
-  const [applications, setApplications] = useState([
-    {
-      id: 1,
-      company: "Google",
-      role: "Frontend Developer",
-      status: "Applied",
-      appliedDate: "2024-06-01",
-      notes: "Referred by friend"
-    },
-    {
-      id: 2,
-      company: "Amazon",
-      role: "Backend Developer",
-      status: "Interview",
-      appliedDate: "2024-06-01",
-      notes: "Referred by friend"
-    }
-  ])
+  const applications = [
+    { id: 1, role: "Frontend Developer", company: "Google", status: "Applied" },
+    { id: 2, role: "Backend Developer", company: "Amazon", status: "Interview" },
+  ];
 
-  const statusConfig = {
-    Applied: {
-      label: "Applied",
-      className: "bg-blue-100 text-blue-700"
-    },
-    Interview: {
-      label: "Interview",
-      className: "bg-yellow-100 text-yellow-700"
-    },
-    Offer: {
-      label: "Offer",
-      className: "bg-green-100 text-green-700"
-    },
-    Rejected: {
-      label: "Rejected",
-      className: "bg-red-100 text-red-700"
-    }
-  }
+  const total = applications.length;
+  const interviews = applications.filter(a => a.status === "Interview").length;
+  const offers = applications.filter(a => a.status === "Offer").length;
+
+  const statusStyle = {
+    Applied: "bg-blue-100 text-blue-600",
+    Interview: "bg-yellow-100 text-yellow-700",
+    Offer: "bg-green-100 text-green-700",
+    Rejected: "bg-red-100 text-red-600",
+  };
 
   return (
-    <div className='max-w-6xl mx-auto px-6 py-8'>
-      {/* Header */}
-      <div className='mb-8'>
-        <h1 className='text-3xl font-bold'>Dashboard</h1>
-        <p className='text-gray-500 mt-2'>Track and manage your job applications</p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-6 py-8">
 
-      {/* Cards */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-
-        <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition'>
-
-          <div className='flex items-center gap-3 mb-4'>
-
-            <p className='text-gray-500 text-sm font-medium'>Total Applications</p>
-            <div className='bg-blue-50 text-blue-600 text-sm p-2 rounded-lg'>
-              <FaBriefcase />
-            </div>
-          </div>
-          <h2 className='text-4xl font-bold mt-4'>25</h2>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className='text-2xl md:text-3xl font-semibold text-gray-900'>Welcome back 👋</h1>
+          <p className='text-gray-500 mt-1 text-sm'>Here’s a quick overview of your job search</p>
         </div>
-
-        <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition'>
-
-          <div className='flex items-center gap-3 mb-4'>
-            <p className='text-gray-500 text-sm font-medium'>
-              Interviews
-            </p>
-
-            <div className='bg-purple-50 text-purple-600 text-sm p-2 rounded-lg'>
-              <FaUserTie />
-            </div>
-          </div>
-
-          <h2 className='text-4xl font-bold mt-4'>
-            5
-          </h2>
-
+        {/* Stats */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <StatCard
+            title="Total Applications"
+            value={total}
+            icon={<FaBriefcase />}
+            color={statusStyle.Applied}
+          />
+          <StatCard
+            title="Interviews"
+            value={interviews}
+            icon={<FaUserTie />}
+            color={statusStyle.Interview}
+          />
+          <StatCard
+            title="Offers"
+            value={offers}
+            icon={<FaAward />}
+            color={statusStyle.Offer}
+          />
         </div>
+        {/* Recent Applications */}
+        <div className="mt-10 bg-white rounded-2xl shadow-sm p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Recent Applications</h2>
 
-        <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition'>
-
-          <div className='flex items-center gap-3 mb-4'>
-            <p className='text-gray-500 text-sm font-medium'>
-              Offers
-            </p>
-
-            <div className='bg-green-50 text-green-600 text-sm p-2 rounded-lg'>
-              <FaAward />
-            </div>
+            <button className='text-sm text-indigo-600 hover:underline'>
+              View All
+            </button>
           </div>
 
-          <h2 className='text-4xl font-bold mt-4'>
-            2
-          </h2>
-
-        </div>
-      </div>
-
-      {/* Recent Activities */}
-      <div className='mt-10'>
-        <h2 className='text-2xl font-bold mb-4'>
-          Recent Applications
-        </h2>
-
-        <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-300'>
-          <div className='divide-y divide-gray-200'>
+          <div className='space-y-3'>
             {applications.map((app) => (
-              <div key={app.id} className='flex justify-between items-center py-3'>
+              <div
+                key={app.id}
+                className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-50 transition"
+              >
                 <div>
-                  <p className='font-medium'>{app.role}</p>
+                  <p className='font-medium text-gray-800'>{app.role}</p>
                   <p className='text-sm text-gray-500'>{app.company}</p>
                 </div>
 
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusConfig[app.status]?.className || "bg-gray-100 text-gray-700"}`}>
-                  {statusConfig[app.status]?.label || app.status}
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${statusStyle[app.status]}`}>
+                  {app.status}
                 </span>
               </div>
             ))}
           </div>
-
-
-
-          <div className='pt-3 mt-3 border-t border-gray-200'>
-            <button className='text-blue-600 text-sm font-medium cursor-pointer hover:text-blue-700 transition'>
-              View All Applications →
-            </button>
-          </div>
-
         </div>
       </div>
-
     </div>
-
   )
 }
 
