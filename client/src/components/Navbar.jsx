@@ -5,54 +5,72 @@ import { HiMenu, HiX } from "react-icons/hi";
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navLinkStyle = ({ isActive }) =>
-        `cursor-pointer px-3 py-2 transition ${isActive
-            ? "text-blue-600 font-semibold border-b-2 border-blue-600"
-            : "text-gray-600 hover:text-blue-500"
+        `px-3 py-2 text-sm font-medium transition ${isActive
+            ? "text-indigo-600"
+            : "text-gray-600 hover:text-indigo-600"
         }`;
 
 
     return (
-        <nav className="bg-white shadow-sm sticky top-0">
-            {/* Top Row */}
-            <div className='max-w-5xl mx-auto flex justify-between items-center border-b border-gray-300 px-6 py-4'>
+        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
 
-                {/* Logo */}
-                <div className='text-md md:text-3xl font-semibold' style={{ fontFamily: "Inter" }}>
-                    Job<span className='text-blue-700'>Tracker</span>
-                </div>
+            <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+                <div className='flex justify-between items-center h-16'>
+                    {/* Logo */}
+                    <div className='text-xl md:text-2xl font-bold text-gray-900'>
+                        Job<span className='text-indigo-600'>Tracker</span>
+                    </div>
 
-                {/* Desktop Links */}
-                <div className='hidden md:flex gap-8 text-gray-700 font-medium'>
-                    <NavLink to="/" className={navLinkStyle}>Dashboard</NavLink>
-                    <NavLink to="/applications" className={navLinkStyle}>Applications </NavLink>
-                    
-                </div>
+                    {/* Desktop Links */}
+                    <div className='hidden md:flex items-center gap-8'>
+                        <NavLink to="/" className={navLinkStyle}>Dashboard</NavLink>
+                        <NavLink to="/applications" className={navLinkStyle}>Applications </NavLink>
+                    </div>
 
-                {/* Mobile Menu */}
-                <div className="md:hidden">
+                    {/* CTA Button (Desktop) */}
+                    <div className='hidden md:block'>
+                        <button className='bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition'>
+                            + Add Application
+                        </button>
+                    </div>
 
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className='text-2xl'
-                    >
-                        {isOpen ? (<HiX />) : (<HiMenu />)}
-                    </button>
+                    {/* Mobile Menu */}
+                    <div className="md:hidden">
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            aria-label='Toggle menu'
+                            className='text-2xl text-gray-700'
+                        >
+                            {isOpen ? (<HiX />) : (<HiMenu />)}
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {/* Dropdown Menu */}
 
-            {
-                isOpen && (
-                    <div className='md:hidden bg-white border-b border-gray-200 shadow-sm'>
-                        <ul className='flex flex-col p-4 gap-2 text-gray-700 font-medium'>
-                            <NavLink to="/" className='cursor-pointer hover:text-blue-700'>Dashboard</NavLink>
-                            <NavLink to="/applications" className='cursor-pointer hover:text-blue-700'>Applications</NavLink>
-                        </ul>
-                    </div>
-                )
-            }
+            {isOpen && (
+                <div className='md:hidden border-t bg-white border-gray-200'>
+                    <div className='px-4 py-4 space-y-3'>
+                        <NavLink
+                            to="/"
+                            onClick={() => setIsOpen(false)}
+                            className='block text-gray-700 hover:text-indigo-600'>Dashboard</NavLink>
 
+                        <NavLink
+                            to="/applications"
+                            onClick={() => setIsOpen(false)}
+                            className="block text-gray-700 hover:text-indigo-600"
+                        >
+                            Applications
+                        </NavLink>
+
+                        <button className="w-full mt-2 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
+                            + Add Application
+                        </button>
+                    </div>
+                </div>
+            )}
         </nav >
     );
 };
