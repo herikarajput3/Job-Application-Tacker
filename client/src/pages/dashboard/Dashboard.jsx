@@ -1,8 +1,46 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaAward, FaBriefcase, FaUserTimes } from 'react-icons/fa'
 import { FaUserTie } from 'react-icons/fa6'
 
 const Dashboard = () => {
+  const [applications, setApplications] = useState([
+    {
+      id: 1,
+      company: "Google",
+      role: "Frontend Developer",
+      status: "Applied",
+      appliedDate: "2024-06-01",
+      notes: "Referred by friend"
+    },
+    {
+      id: 2,
+      company: "Amazon",
+      role: "Backend Developer",
+      status: "Interview",
+      appliedDate: "2024-06-01",
+      notes: "Referred by friend"
+    }
+  ])
+
+  const statusConfig = {
+    Applied: {
+      label: "Applied",
+      className: "bg-blue-100 text-blue-700"
+    },
+    Interview: {
+      label: "Interview",
+      className: "bg-yellow-100 text-yellow-700"
+    },
+    Offer: {
+      label: "Offer",
+      className: "bg-green-100 text-green-700"
+    },
+    Rejected: {
+      label: "Rejected",
+      className: "bg-red-100 text-red-700"
+    }
+  }
+
   return (
     <div className='max-w-6xl mx-auto px-6 py-8'>
       {/* Header */}
@@ -70,43 +108,22 @@ const Dashboard = () => {
         </h2>
 
         <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-300'>
+          <div className='divide-y divide-gray-200'>
+            {applications.map((app) => (
+              <div key={app.id} className='flex justify-between items-center py-3'>
+                <div>
+                  <p className='font-medium'>{app.role}</p>
+                  <p className='text-sm text-gray-500'>{app.company}</p>
+                </div>
 
-          <div className='flex justify-between items-center py-3 border-b border-gray-200'>
-
-            <div >
-              <p className='font-medium'>Frontend Developer</p>
-              <p className='text-sm text-gray-500'>Google</p>
-            </div>
-
-            <span className='bg-blue-100 px-3 py-1 rounded-full text-sm font-medium text-blue-700'>
-              Applied
-            </span>
-          </div>
-
-          <div className='flex justify-between items-center py-3 border-b border-gray-200'>
-
-            <div>
-              <p className='font-medium'>React Developer</p>
-              <p className='text-sm text-gray-500'>Amazon</p>
-            </div>
-
-            <span className='bg-yellow-100 px-3 py-1 rounded-full text-sm font-medium text-yellow-700'>
-              Interview
-            </span>
-
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusConfig[app.status]?.className || "bg-gray-100 text-gray-700"}`}>
+                  {statusConfig[app.status]?.label || app.status}
+                </span>
+              </div>
+            ))}
           </div>
 
 
-          <div className='flex justify-between items-center py-3'>
-            <div>
-              <p className='font-medium'>Software Engineer</p>
-              <p className='text-sm text-gray-500'>Meta</p>
-            </div>
-
-            <span className='bg-green-100 px-3 py-1 rounded-full text-sm font-medium text-green-700'>
-              Offer
-            </span>
-          </div>
 
           <div className='pt-3 mt-3 border-t border-gray-200'>
             <button className='text-blue-600 text-sm font-medium cursor-pointer hover:text-blue-700 transition'>
