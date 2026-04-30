@@ -12,12 +12,26 @@ const Dashboard = () => {
   const interviews = applications.filter(a => a.status === "Interview").length;
   const offers = applications.filter(a => a.status === "Offer").length;
 
-  const statusStyle = {
-    Applied: "bg-blue-100 text-blue-600",
-    Interview: "bg-yellow-100 text-yellow-700",
-    Offer: "bg-green-100 text-green-700",
-    Rejected: "bg-red-100 text-red-600",
-  };
+  const statColors = {
+    Applied: {
+      bg: "bg-blue-100",
+      icon: "text-blue-600",
+      glow: "bg-blue-400",
+      ring: "ring-1 ring-blue-200"
+    },
+    Interview: {
+      bg: "bg-yellow-100",
+      icon: "text-yellow-700",
+      glow: "bg-yellow-400",
+      ring: "ring-1 ring-yellow-200"
+    },
+    Offer: {
+      bg: "bg-green-100",
+      icon: "text-green-600",
+      glow: "bg-green-400",
+      ring: "ring-1 ring-green-200"
+    },
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -34,19 +48,19 @@ const Dashboard = () => {
             title="Total Applications"
             value={total}
             icon={<FaBriefcase />}
-            color={statusStyle.Applied}
+            color={statColors.Applied}
           />
           <StatCard
             title="Interviews"
             value={interviews}
             icon={<FaUserTie />}
-            color={statusStyle.Interview}
+            color={statColors.Interview}
           />
           <StatCard
             title="Offers"
             value={offers}
             icon={<FaAward />}
-            color={statusStyle.Offer}
+            color={statColors.Offer}
           />
         </div>
         {/* Recent Applications */}
@@ -71,7 +85,7 @@ const Dashboard = () => {
                 </div>
 
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium ${statusStyle[app.status]}`}>
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${statColors[app.status]}`}>
                   {app.status}
                 </span>
               </div>
