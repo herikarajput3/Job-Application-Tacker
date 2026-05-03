@@ -1,24 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
 
-    const [company, setCompany] = useState(editingApp?.company || "");
-    const [role, setRole] = useState(editingApp?.role || "");
-    const [status, setStatus] = useState(editingApp?.status || "Applied");
-    const [date, setDate] = useState(editingApp?.appliedDate || "");
-    const [notes, setNotes] = useState(editingApp?.notes || "");
+    const [formData, setFormData] = useState({
+        company: "",
+        role: "",
+        status: "Applied",
+        appliedDate: "",
+        notes: ""
+    });
+    const [errors, setErrors] = useState({});
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        let newErrors = {};
+
+        if (!formData.company.trim()) {
+            newErrors.company = "Company is required";
+        }
+
+        if (!formData.role.trim()) {
+            newErrors.role = "Role is required";
+        }
+
+        if (!formData.appliedDate) {
+            newErrors.appliedDate = "Date is required";
+        }
+
+        setErrors(newErrors);
+
+        // ❗ stop if errors exist
+        if (Object.keys(newErrors).length > 0) return;
+
         const newApp = {
             id: editingApp ? editingApp.id : Date.now(),
-            company,
-            role,
-            status,
-            appliedDate: date,
-            notes
-        }
+            ...formData
+        };
 
         if (editingApp) {
             onUpdate(newApp); // edit mode
@@ -27,15 +45,33 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
             onAdd(newApp); // add mode
         }
 
-        setCompany("");
-        setRole("");
-        setStatus("Applied");
-        setDate("");
-        setNotes("");
+        onClose();
     }
 
+    // Prefill form data
+    useEffect(() => {
+        if (editingApp) {
+            setFormData(editingApp);
+        }
+    }, [editingApp]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+
+        // remove error when user starts typing
+        setErrors(prev => ({
+            ...prev,
+            [name]: ""
+        }));
+    };
+
     return (
-        <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-sm">
+        <div className="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
 
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
@@ -47,11 +83,12 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
                 </div>
 
                 <button
-                    type='button'
                     onClick={onClose}
-                    className="text-gray-400 hover:text-gray-600"
-
-                >✕</button>
+                    className="w-8 h-8 flex items-center justify-center rounded-full 
+             hover:bg-gray-100 transition"
+                >
+                    ✕
+                </button>
             </div>
 
             <form onSubmit={handleSubmit} className='space-y-5'>
@@ -63,24 +100,36 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
                         <label className='text-sm text-gray-500'>Company</label>
                         <input
                             type="text"
-                            value={company}
-                            onChange={(e) => setCompany(e.target.value)}
+                            name="company"
+                            value={formData.company}
+                            onChange={handleChange}
                             placeholder="Google, Amazon..."
-                            className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 
-                         focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className={`mt-1 w-full px-3 py-2 rounded-lg border 
+    ${errors.company ? "border-red-500" : "border-gray-200"}
+    focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                         />
+                        {errors.company && (
+                            <p className="text-xs text-red-500 mt-1">
+                                {errors.company}
+                            </p>
+                        )}
                     </div>
                     {/* Role */}
                     <div>
                         <label className="text-sm text-gray-500">Role</label>
                         <input
-                            type="text"
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            placeholder="Frontend Developer"
-                            className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 
-                         focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            name="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                            className={`mt-1 w-full px-3 py-2 rounded-lg border 
+    ${errors.role ? "border-red-500" : "border-gray-200"}`}
                         />
+
+                        {errors.role && (
+                            <p className="text-xs text-red-500 mt-1">
+                                {errors.role}
+                            </p>
+                        )}
                     </div>
                 </div>
 
@@ -90,8 +139,9 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
                     <div>
                         <label className="text-sm text-gray-500">Status</label>
                         <select
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
+                            name="status"
+                            value={formData.status}
+                            onChange={handleChange}
                             className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 
                          focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
@@ -106,11 +156,18 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
                         <label className="text-sm text-gray-500">Applied Date</label>
                         <input
                             type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 
-                         focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            name="appliedDate"
+                            value={formData.appliedDate}
+                            onChange={handleChange}
+                            className={`mt-1 w-full px-3 py-2 rounded-lg border 
+    ${errors.appliedDate ? "border-red-500" : "border-gray-200"}`}
                         />
+
+                        {errors.appliedDate && (
+                            <p className="text-xs text-red-500 mt-1">
+                                {errors.appliedDate}
+                            </p>
+                        )}
                     </div>
 
                 </div>
@@ -119,8 +176,9 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
                 <div>
                     <label className="text-sm text-gray-500">Notes</label>
                     <textarea
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
+                        name="notes"
+                        value={formData.notes}
+                        onChange={handleChange}
                         placeholder="Optional notes..."
                         rows="3"
                         className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 
@@ -131,8 +189,9 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
                 {/* Button */}
                 <button
                     type="submit"
-                    className="w-full bg-indigo-600 text-white py-2.5 rounded-lg 
-                     hover:bg-indigo-700 transition font-medium"
+                    className="w-full py-2.5 rounded-lg font-medium text-white
+           bg-linear-to-r from-indigo-600 to-purple-600
+           hover:opacity-90 transition"
                 >
                     {editingApp ? "Update Application" : "Add Application"}
                 </button>

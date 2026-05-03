@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ApplicationForm from '../../components/ApplicationForm';
+import ApplicationTable from '../../components/ApplicationTable';
 import Modal from '../../components/Modal';
 
 const Applications = () => {
@@ -10,6 +11,7 @@ const Applications = () => {
     const [statusFilter, setStatusFilter] = useState("All");
 
     const [editingApp, setEditingApp] = useState(null);
+    const [deleteId, setDeleteId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -29,14 +31,31 @@ const Applications = () => {
         return matchesSearch && matchesStatus;
     })
 
-    const handleUpdate = (updateApp) => {
+    const handleAdd = (newApp) => {
+        setApplications(prev => [...prev, newApp]);
+        toast.success("Application added!");
+    };
+
+    const handleUpdate = (updatedApp) => {
         setApplications(prev =>
             prev.map(app =>
-                app.id === updateApp.id ? updateApp : app
+                app.id === updatedApp.id ? updatedApp : app
             )
-        )
-    }
+        );
+        toast.success("Application updated!");
+    };
 
+    const handleDelete = (id) => {
+        setDeleteId(id);
+    };
+
+    const confirmDelete = () => {
+        setApplications(prev =>
+            prev.filter(app => app.id !== deleteId)
+        );
+        setDeleteId(null);
+        toast.success("Application deleted!");
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-6 py-8">
@@ -79,14 +98,28 @@ const Applications = () => {
 
                     {/* Add Button */}
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                            setEditingApp(null);
+                            setIsModalOpen(true);
+                        }}
                         className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition">
                         + Add
                     </button>
                 </div>
             </div>
 
-            {/* Modal */}
+            {/* 🔹 Table */}
+            <ApplicationTable
+                data={filteredApplications}
+                statusStyle={statusStyle}
+                onEdit={(app) => {
+                    setEditingApp(app);
+                    setIsModalOpen(true);
+                }}
+                onDelete={handleDelete}
+            />
+
+            {/*FORM Modal */}
 
             <Modal
                 isOpen={isModalOpen}
@@ -96,10 +129,7 @@ const Applications = () => {
                 }}
             >
                 <ApplicationForm
-                    onAdd={(newApp) => {
-                        setApplications(prev => [...prev, newApp]);
-                        setIsModalOpen(false); // close after adding
-                    }}
+                    onAdd={handleAdd}
                     onUpdate={handleUpdate}
                     editingApp={editingApp}
                     onClose={() => {
@@ -109,61 +139,28 @@ const Applications = () => {
                 />
             </Modal>
 
-            {/* 🔹 Table */}
-            <div className="bg-white rounded-2xl shadow-sm p-2">
+            {/* DELETE Modal */}
 
-                {/* Table Header */}
-                <div className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] px-4 py-3 text-xs text-gray-400 uppercase tracking-wide">
-                    <span>Company</span>
-                    <span>Role</span>
-                    <span>Status</span>
-                    <span>Date</span>
-                    <span className="text-right">Actions</span>
-                </div>
+            {deleteId && (
+                <Modal isOpen={true} onClose={() => setDeleteId(null)}>
+                    <div className="p-6 text-center">
+                        <p className="mb-4">Are you sure you want to delete this application?</p>
 
-                {/* Table Body */}
-                <div className="space-y-2">
-                    {filteredApplications.map((app) => (
-                        <div
-                            key={app.id}
-                            className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] items-center px-4 py-3 rounded-xl 
-                     hover:bg-gray-50 transition"
-                        >
-                            <span className="font-medium text-gray-800">{app.company}</span>
-                            <span className="text-gray-600">{app.role}</span>
-
-                            <span>
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusStyle[app.status]}`}>
-                                    {app.status}
-                                </span>
-                            </span>
-
-                            <span className="text-sm text-gray-500">{app.appliedDate}</span>
-
-                            {/* Actions */}
-                            <div className="flex justify-end gap-2">
-                                <button
-                                    onClick={() => {
-                                        setEditingApp(app);
-                                        setIsModalOpen(true);
-                                    }}
-                                    className="px-2 py-1 text-xs rounded-md bg-gray-100 hover:bg-gray-200 transi">
-                                    Edit
-                                </button>
-                                <button
-
-                                    className="px-2 py-1 text-xs rounded-md bg-red-50 text-red-600 hover:bg-red-100 transition">
-                                    Delete
-                                </button>
-                            </div>
-
+                        <div className="flex justify-center gap-3">
+                            <button
+                                onClick={confirmDelete}
+                                className="bg-red-500 text-white px-4 py-2 rounded"
+                            >Yes</button>
+                            <button
+                                onClick={() => setDeleteId(null)}
+                                className="bg-gray-200 px-4 py-2 rounded"
+                            >Cancel</button>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                </Modal>
+            )}
 
-            </div>
-
-        </div>
+        </div >
     )
 }
 
