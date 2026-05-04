@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import { HiMenu, HiX } from "react-icons/hi";
 
-const Navbar = () => {
+const Navbar = ({ onAddClick }) => {
     const [isOpen, setIsOpen] = useState(false);
     const navLinkStyle = ({ isActive }) =>
         `px-3 py-2 text-sm font-medium transition ${isActive
@@ -29,7 +29,10 @@ const Navbar = () => {
 
                     {/* CTA Button (Desktop) */}
                     <div className='hidden md:block'>
-                        <button className='bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition'>
+                        <button
+                            onClick={onAddClick}
+                            className='bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition'
+                        >
                             + Add Application
                         </button>
                     </div>
@@ -65,7 +68,13 @@ const Navbar = () => {
                             Applications
                         </NavLink>
 
-                        <button className="w-full mt-2 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
+                        <button
+                            onClick={() => {
+                                onAddClick();
+                                setIsOpen(false);
+                            }}
+                            className="w-full mt-2 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+                        >
                             + Add Application
                         </button>
                     </div>

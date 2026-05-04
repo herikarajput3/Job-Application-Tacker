@@ -1,8 +1,9 @@
 const ApplicationTable = ({ data, onEdit, onDelete, statusStyle }) => {
     return (
-        <div className="bg-white rounded-2xl shadow-sm p-2">
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
 
-            <div className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] px-4 py-3 text-xs text-gray-400 uppercase">
+            {/* Header */}
+            <div className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] px-6 py-3 text-xs text-gray-400 uppercase tracking-wide bg-gray-50">
                 <span>Company</span>
                 <span>Role</span>
                 <span>Status</span>
@@ -10,27 +11,57 @@ const ApplicationTable = ({ data, onEdit, onDelete, statusStyle }) => {
                 <span className="text-right">Actions</span>
             </div>
 
-            <div className="space-y-2">
+            {/* Rows */}
+            <div className="divide-y divide-gray-100">
+                {data.length === 0 && (
+                    <p className="text-center py-10 text-gray-400">
+                        No applications yet
+                    </p>
+                )}
                 {data.map((app) => (
-                    <div key={app.id} className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] px-4 py-3">
+                    <div
+                        key={app.id}
+                        className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] items-center px-6 py-4 hover:bg-gray-50 transition"
+                    >
+                        {/* Company */}
+                        <div>
+                            <p className="font-medium text-gray-900">{app.company}</p>
+                        </div>
 
-                        <span>{app.company}</span>
-                        <span>{app.role}</span>
+                        {/* Role */}
+                        <p className="text-gray-600">{app.role}</p>
 
-                        <span className={`px-2 py-1 text-xs rounded ${statusStyle[app.status]}`}>
-                            {app.status}
-                        </span>
+                        {/* Status */}
+                        <div>
+                            <span className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${statusStyle[app.status]}`}>
+                                {app.status}
+                            </span>
+                        </div>
 
-                        <span>{app.appliedDate}</span>
+                        {/* Date */}
+                        <p className="text-sm text-gray-500">{app.appliedDate}</p>
 
+                        {/* Actions */}
                         <div className="flex justify-end gap-2">
-                            <button onClick={() => onEdit(app)}>Edit</button>
-                            <button onClick={() => onDelete(app.id)}>Delete</button>
+                            <button
+                                onClick={() => onEdit(app)}
+                                className="text-sm text-gray-500 hover:text-indigo-600 transition"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                onClick={() => onDelete(app.id)}
+                                className="text-sm text-gray-500 hover:text-red-600 transition"
+                            >
+                                Delete
+                            </button>
                         </div>
 
                     </div>
                 ))}
             </div>
+
         </div>
     );
 };

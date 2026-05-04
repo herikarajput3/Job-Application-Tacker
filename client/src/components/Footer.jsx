@@ -1,9 +1,9 @@
-import React from 'react'
-
 const Footer = () => {
   return (
-    <div>Footer</div>
-  )
-}
+    <div className="text-center text-xs text-gray-400 py-4">
+      © 2026 JobTracker
+    </div>
+  );
+};
 
-export default Footer
+export default Footer;

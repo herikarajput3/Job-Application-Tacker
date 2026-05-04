@@ -43,6 +43,13 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
         }
         else {
             onAdd(newApp); // add mode
+            setFormData({
+                company: "",
+                role: "",
+                status: "Applied",
+                appliedDate: "",
+                notes: ""
+            });
         }
 
         onClose();

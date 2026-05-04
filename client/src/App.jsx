@@ -2,12 +2,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Layout from "./layouts/Layout"
 import Dashboard from "./pages/dashboard/Dashboard"
 import Applications from "./pages/applications/Applications"
-import { Toaster } from "react-hot-toast"
+import  { Toaster } from "react-hot-toast";
 const App = () => {
   return (
     <Router>
-      <Toaster position="bottom-right" />
-
+      <Toaster toastOptions={{ duration: 3000 }} position="bottom-right" />
       <Routes>
         <Route element={<Layout />} >
           <Route path="/" element={<Dashboard />} />

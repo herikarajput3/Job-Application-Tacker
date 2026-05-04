@@ -2,10 +2,12 @@ import { useState } from 'react'
 import ApplicationForm from '../../components/ApplicationForm';
 import ApplicationTable from '../../components/ApplicationTable';
 import Modal from '../../components/Modal';
+import { useOutletContext } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 const Applications = () => {
-
-    const [applications, setApplications] = useState([])
+    
+    const { applications, setApplications } = useOutletContext();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
