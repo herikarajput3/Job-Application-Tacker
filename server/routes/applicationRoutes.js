@@ -1,11 +1,10 @@
 import express from "express";
+import { createApplication } from "../controllers/applicationController";
 
 const router = express.Router();
 
 // Create application
-router.post("/", (req, res) => {
-    res.send("Create application");
-})
+router.post("/", createApplication);
 
 // Get all applications
 router.get("/", (req, res) => {
