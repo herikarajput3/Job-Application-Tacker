@@ -1,5 +1,5 @@
 import express from "express";
-import { createApplication } from "../controllers/applicationController";
+import { createApplication, getApplications } from "../controllers/applicationController.js";
 
 const router = express.Router();
 
@@ -7,9 +7,7 @@ const router = express.Router();
 router.post("/", createApplication);
 
 // Get all applications
-router.get("/", (req, res) => {
-    res.send("Get all applications");
-})
+router.get("/", getApplications);
 
 // Get single application
 router.get("/:id", (req, res) => {
