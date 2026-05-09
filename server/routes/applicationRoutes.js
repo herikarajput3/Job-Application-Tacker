@@ -1,5 +1,5 @@
 import express from "express";
-import { createApplication, getApplications } from "../controllers/applicationController.js";
+import { createApplication, deleteApplication, getApplicationById, getApplications, updateApplication } from "../controllers/applicationController.js";
 
 const router = express.Router();
 
@@ -10,18 +10,12 @@ router.post("/", createApplication);
 router.get("/", getApplications);
 
 // Get single application
-router.get("/:id", (req, res) => {
-    res.send("Get single application");
-})
+router.get("/:id", getApplicationById);
 
 // Update application
-router.put("/:id", (req, res) => {
-    res.send("Update application");
-})
+router.put("/:id", updateApplication);
 
 // Delete application
-router.delete("/:id", (req, res) => {
-    res.send("Delete application");
-})
+router.delete("/:id", deleteApplication);
 
 export default router;
