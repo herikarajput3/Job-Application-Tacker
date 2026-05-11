@@ -1,14 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import { Outlet } from 'react-router-dom'
 import Footer from '../components/Footer'
 import Modal from '../components/Modal'
 import ApplicationForm from '../components/ApplicationForm'
+import API from '../service/api'
 
 const Layout = () => {
 
     const [applications, setApplications] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const fetchApplications = async () => {
+        try {
+            const response = await API.get("/applications");
+            console.log("response", response.data.data);
+            setApplications(response.data.data);
+        } catch (error) {
+            console.error("Error fetching applications", error);
+        }
+    }
+
+    useEffect(() => {
+        fetchApplications();
+    }, [])
 
     return (
         <div>

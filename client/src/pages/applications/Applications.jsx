@@ -4,9 +4,10 @@ import ApplicationTable from '../../components/ApplicationTable';
 import Modal from '../../components/Modal';
 import { useOutletContext } from "react-router-dom";
 import toast from 'react-hot-toast';
+import API from '../../service/api';
 
 const Applications = () => {
-    
+
     const { applications, setApplications } = useOutletContext();
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -41,7 +42,7 @@ const Applications = () => {
     const handleUpdate = (updatedApp) => {
         setApplications(prev =>
             prev.map(app =>
-                app.id === updatedApp.id ? updatedApp : app
+                app._id === updatedApp._id ? updatedApp : app
             )
         );
         toast.success("Application updated!");
@@ -51,12 +52,15 @@ const Applications = () => {
         setDeleteId(id);
     };
 
-    const confirmDelete = () => {
-        setApplications(prev =>
-            prev.filter(app => app.id !== deleteId)
-        );
-        setDeleteId(null);
-        toast.success("Application deleted!");
+    const confirmDelete = async () => {
+        try {
+            await API.delete(`/applications/${deleteId}`);
+            setApplications(prev => prev.filter(app => app._id !== deleteId));
+            setDeleteId(null);
+            toast.success("Application deleted!");
+        } catch (error) {
+            console.error("Error deleting application", error);
+        }
     };
 
     return (

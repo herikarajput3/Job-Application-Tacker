@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import API from '../service/api';
 
 const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
 
@@ -6,12 +7,13 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
         company: "",
         role: "",
         status: "Applied",
-        appliedDate: "",
+        dateApplied: "",
         notes: ""
     });
     const [errors, setErrors] = useState({});
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         let newErrors = {};
@@ -24,8 +26,8 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
             newErrors.role = "Role is required";
         }
 
-        if (!formData.appliedDate) {
-            newErrors.appliedDate = "Date is required";
+        if (!formData.dateApplied) {
+            newErrors.dateApplied = "Date is required";
         }
 
         setErrors(newErrors);
@@ -33,26 +35,22 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
         // ❗ stop if errors exist
         if (Object.keys(newErrors).length > 0) return;
 
-        const newApp = {
-            id: editingApp ? editingApp.id : Date.now(),
-            ...formData
-        };
-
-        if (editingApp) {
-            onUpdate(newApp); // edit mode
+        try {
+            // update application
+            if (editingApp) {
+                const response = await API.put(`/applications/${editingApp._id}`, formData);
+                onUpdate(response.data.data);
+                console.log("Updated application", response.data.data);
+            }
+            else {
+                const response = await API.post("/applications", formData);
+                onAdd(response.data.data);
+                console.log("Added application", response.data.data);
+            }
+            onClose();
+        } catch (error) {
+            console.error("Error adding application", error);
         }
-        else {
-            onAdd(newApp); // add mode
-            setFormData({
-                company: "",
-                role: "",
-                status: "Applied",
-                appliedDate: "",
-                notes: ""
-            });
-        }
-
-        onClose();
     }
 
     // Prefill form data
@@ -163,16 +161,16 @@ const ApplicationForm = ({ onAdd, onUpdate, editingApp, onClose }) => {
                         <label className="text-sm text-gray-500">Applied Date</label>
                         <input
                             type="date"
-                            name="appliedDate"
-                            value={formData.appliedDate}
+                            name="dateApplied"
+                            value={formData.dateApplied}
                             onChange={handleChange}
                             className={`mt-1 w-full px-3 py-2 rounded-lg border 
-    ${errors.appliedDate ? "border-red-500" : "border-gray-200"}`}
+    ${errors.dateApplied ? "border-red-500" : "border-gray-200"}`}
                         />
 
-                        {errors.appliedDate && (
+                        {errors.dateApplied && (
                             <p className="text-xs text-red-500 mt-1">
-                                {errors.appliedDate}
+                                {errors.dateApplied}
                             </p>
                         )}
                     </div>

@@ -3,6 +3,7 @@ import Layout from "./layouts/Layout"
 import Dashboard from "./pages/dashboard/Dashboard"
 import Applications from "./pages/applications/Applications"
 import  { Toaster } from "react-hot-toast";
+import ApplicationDetails from "./pages/applications/ApplicationDetails";
 const App = () => {
   return (
     <Router>
@@ -11,6 +12,7 @@ const App = () => {
         <Route element={<Layout />} >
           <Route path="/" element={<Dashboard />} />
           <Route path="/applications" element={<Applications />} />
+          <Route path="/applications/:id" element={<ApplicationDetails />} />
         </Route>
       </Routes>
     </Router>

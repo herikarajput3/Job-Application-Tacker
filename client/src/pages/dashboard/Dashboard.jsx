@@ -1,12 +1,10 @@
 import React from 'react'
 import StatCard from '../../components/StatCard';
 import { FaAward, FaBriefcase, FaUserTie } from 'react-icons/fa';
+import { Link, useOutletContext } from 'react-router-dom';
 
 const Dashboard = () => {
-  const applications = [
-    { id: 1, role: "Frontend Developer", company: "Google", status: "Applied" },
-    { id: 2, role: "Backend Developer", company: "Amazon", status: "Interview" },
-  ];
+  const { applications } = useOutletContext();
 
   const total = applications.length;
   const interviews = applications.filter(a => a.status === "Interview").length;
@@ -32,7 +30,7 @@ const Dashboard = () => {
       ring: "ring-1 ring-green-200"
     },
   }
-
+  const recentApplications = applications.slice(0, 5);
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -68,15 +66,15 @@ const Dashboard = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">Recent Applications</h2>
 
-            <button className='text-sm text-indigo-600 hover:underline'>
+            <Link to="/applications" className='text-sm text-indigo-600 hover:underline'>
               View All
-            </button>
+            </Link>
           </div>
 
           <div className='space-y-3'>
-            {applications.map((app) => (
+            {recentApplications.map((app) => (
               <div
-                key={app.id}
+                key={app._id}
                 className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-50 transition"
               >
                 <div>
@@ -85,7 +83,9 @@ const Dashboard = () => {
                 </div>
 
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium ${statColors[app.status]}`}>
+                  className={`px-3 py-1 rounded-full text-xs font-medium 
+${statColors[app.status]?.bg} 
+${statColors[app.status]?.icon}`}>
                   {app.status}
                 </span>
               </div>

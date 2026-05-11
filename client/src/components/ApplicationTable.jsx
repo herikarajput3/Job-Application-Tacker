@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 const ApplicationTable = ({ data, onEdit, onDelete, statusStyle }) => {
+    const navigate = useNavigate();
     return (
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
 
@@ -20,8 +23,9 @@ const ApplicationTable = ({ data, onEdit, onDelete, statusStyle }) => {
                 )}
                 {data.map((app) => (
                     <div
-                        key={app.id}
-                        className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] items-center px-6 py-4 hover:bg-gray-50 transition"
+                        key={app._id}
+                        onClick={() => navigate(`/applications/${app._id}`)}
+                        className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] items-center px-6 py-4 hover:bg-gray-50 transition cursor-pointer"
                     >
                         {/* Company */}
                         <div>
@@ -39,20 +43,25 @@ const ApplicationTable = ({ data, onEdit, onDelete, statusStyle }) => {
                         </div>
 
                         {/* Date */}
-                        <p className="text-sm text-gray-500">{app.appliedDate}</p>
+                        <p className="text-sm text-gray-500">{new Date(app.dateApplied).toLocaleDateString()}</p>
 
                         {/* Actions */}
                         <div className="flex justify-end gap-2">
                             <button
-                                onClick={() => onEdit(app)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onEdit(app);
+                                }}
                                 className="text-sm text-gray-500 hover:text-indigo-600 transition"
                             >
                                 Edit
                             </button>
 
                             <button
-                                onClick={() => onDelete(app.id)}
-                                className="text-sm text-gray-500 hover:text-red-600 transition"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete(app._id);
+                                }} className="text-sm text-gray-500 hover:text-red-600 transition"
                             >
                                 Delete
                             </button>
