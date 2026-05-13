@@ -1,123 +1,86 @@
+import asyncHandler from "../middleware/async.js";
 import Application from "../models/Application.js"
+import ErrorResponse from "../utils/errorResponse.js";
 
-export const createApplication = async (req, res) => {
-    try {
-        const application = await Application.create(req.body);
-
-        res.status(201).json({
-            success: true,
-            message: "Application created successfully",
-            data: application
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-}
+export const createApplication = asyncHandler(async (req, res) => {
+  const application = await Application.create(req.body);
+  res.status(201).json({
+    success: true,
+    message: "Application created successfully",
+    data: application
+  });
+});
 
 // Get all applications
-export const getApplications = async (req, res) => {
-    try {
-        const applications = await Application.find().sort({
-            createdAt: -1,
-        });
+export const getApplications = asyncHandler(async (req, res) => {
 
-        res.status(200).json({
-            success: true,
-            count: applications.length,
-            data: applications,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        });
-    }
-};
+  const applications = await Application.find().sort({
+    createdAt: -1,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Applications fetched successfully",
+    count: applications.length,
+    data: applications,
+  });
+
+});
 
 // Get single application
-export const getApplicationById = async (req, res) => {
-  try {
-    const application = await Application.findById(req.params.id);
+export const getApplicationById = asyncHandler(async (req, res) => {
 
-    // If application not found
-    if (!application) {
-      return res.status(404).json({
-        success: false,
-        message: "Application not found",
-      });
-    }
+  const application = await Application.findById(req.params.id);
 
-    res.status(200).json({
-      success: true,
-      data: application,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+  if (!application) {
+    throw new ErrorResponse("Application not found", 404);
   }
-};
 
+  res.status(200).json({
+    success: true,
+    message: "Application fetched successfully",
+    data: application,
+  });
+
+});
 // Update application
-export const updateApplication = async (req, res) => {
-  try {
-    const updatedApplication = await Application.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+export const updateApplication = asyncHandler(async (req, res) => {
 
-    // If application not found
-    if (!updatedApplication) {
-      return res.status(404).json({
-        success: false,
-        message: "Application not found",
-      });
+  const updatedApplication = await Application.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true,
     }
+  );
 
-    res.status(200).json({
-      success: true,
-      message: "Application updated successfully",
-      data: updatedApplication,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+  if (!updatedApplication) {
+    throw new ErrorResponse("Application not found", 404);
   }
-};
+
+  res.status(200).json({
+    success: true,
+    message: "Application updated successfully",
+    data: updatedApplication,
+  });
+
+});
 
 // Delete application
-export const deleteApplication = async (req, res) => {
-  try {
-    const deletedApplication = await Application.findByIdAndDelete(
-      req.params.id
-    );
+export const deleteApplication = asyncHandler(async (req, res) => {
 
-    // If application not found
-    if (!deletedApplication) {
-      return res.status(404).json({
-        success: false,
-        message: "Application not found",
-      });
-    }
+  const deletedApplication = await Application.findByIdAndDelete(
+    req.params.id
+  );
 
-    res.status(200).json({
-      success: true,
-      message: "Application deleted successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+  if (!deletedApplication) {
+    throw new ErrorResponse("Application not found", 404);
   }
-};
+
+  res.status(200).json({
+    success: true,
+    message: "Application deleted successfully",
+  });
+
+});
