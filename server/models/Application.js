@@ -20,10 +20,14 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       enum: {
         values: [
+          "Saved",
           "Applied",
-          "Interview",
+          "Assessment",
+          "Interview Scheduled",
+          "Interviewed",
           "Offer",
           "Rejected",
+          "Ghosted",
         ],
         message: "Invalid application status",
       },
@@ -39,6 +43,68 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       trim: true,
       maxlength: [1000, "Notes cannot exceed 1000 characters"],
+    },
+
+    location: {
+      type: String,
+      trim: true,
+      maxlength: [100, "Location cannot exceed 100 characters"],
+    },
+
+    salaryRange: {
+      type: String,
+      trim: true,
+    },
+
+    jobType: {
+      type: String,
+      enum: {
+        values: [
+          "Full-time",
+          "Internship",
+          "Contract",
+          "Freelance",
+        ],
+        message: "Invalid job type",
+      },
+    },
+
+    source: {
+      type: String,
+      enum: {
+        values: [
+          "LinkedIn",
+          "Referral",
+          "Company Website",
+          "Indeed",
+          "Other",
+        ],
+        message: "Invalid application source",
+      },
+    },
+
+    applicationLink: {
+      type: String,
+      trim: true,
+    },
+
+    contactEmail: {
+      type: String,
+      trim: true,
+      lowercase: true,
+    },
+
+    priority: {
+      type: String,
+      enum: {
+        values: ["Low", "Medium", "High"],
+        message: "Invalid priority level",
+      },
+      default: "Medium",
+    },
+
+    followUpDate: {
+      type: Date,
     },
   },
   {
