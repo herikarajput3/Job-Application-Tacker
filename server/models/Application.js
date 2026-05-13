@@ -4,23 +4,41 @@ const applicationSchema = new mongoose.Schema(
   {
     company: {
       type: String,
-      required: true,
+      required: [true, "Company name is required"],
+      trim: true,
+      maxlength: [100, "Company name cannot exceed 100 characters"],
     },
+
     role: {
       type: String,
-      required: true,
+      required: [true, "Role is required"],
+      trim: true,
+      maxlength: [100, "Role cannot exceed 100 characters"],
     },
+
     status: {
       type: String,
-      enum: ["Applied", "Interview", "Offer", "Rejected"],
+      enum: {
+        values: [
+          "Applied",
+          "Interview",
+          "Offer",
+          "Rejected",
+        ],
+        message: "Invalid application status",
+      },
       default: "Applied",
     },
+
     dateApplied: {
       type: Date,
       default: Date.now,
     },
+
     notes: {
       type: String,
+      trim: true,
+      maxlength: [1000, "Notes cannot exceed 1000 characters"],
     },
   },
   {
@@ -28,6 +46,9 @@ const applicationSchema = new mongoose.Schema(
   }
 );
 
-const Application = mongoose.model("Application", applicationSchema);
+const Application = mongoose.model(
+  "Application",
+  applicationSchema
+);
 
 export default Application;
