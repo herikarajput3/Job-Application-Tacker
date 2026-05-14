@@ -11,8 +11,7 @@ const Modal = ({ isOpen, onClose, children }) => {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl mx-4 bg-white rounded-3xl shadow-xl 
-                      animate-[scaleIn_0.2s_ease]">
+      <div className="relative w-full max-w-4xl mx-4 bg-white rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
 
         {children}
 
