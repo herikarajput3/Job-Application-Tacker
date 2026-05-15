@@ -14,6 +14,33 @@ export const createApplication = asyncHandler(async (req, res) => {
 // Get all applications
 export const getApplications = asyncHandler(async (req, res) => {
 
+  const { status, search } = req.query;
+
+  let query = {};
+
+  // Status filter
+  if (status && status !== "All") {
+    query.status = status;
+  }
+
+  // Search filter
+  if (search) {
+    query.$or = [
+      {
+        company: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+      {
+        role: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+    ];
+  }
+
   const applications = await Application.find().sort({
     createdAt: -1,
   });
