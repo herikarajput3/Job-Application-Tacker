@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ApplicationForm from '../../components/ApplicationForm';
 import ApplicationTable from '../../components/ApplicationTable';
 import Modal from '../../components/Modal';
@@ -12,6 +12,8 @@ const Applications = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
+    const [page, setPage] = useState(1);
+    const [pagination, setPagination] = useState({});
 
     const [editingApp, setEditingApp] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
@@ -25,15 +27,18 @@ const Applications = () => {
         Rejected: "bg-red-100 text-red-600"
     }
 
-    const filteredApplications = applications.filter((app) => {
-        const matchesSearch =
-            app.company.toLowerCase().includes(searchTerm.toLowerCase()) || app.role.toLowerCase().includes(searchTerm.toLowerCase());
-
-        const matchesStatus = statusFilter === "All" || app.status === statusFilter;
-
-        return matchesSearch && matchesStatus;
-    })
-
+    const fetchApplications = async () => {
+        try {
+            const response = await API.get(`/applications?search=${searchTerm}&status=${statusFilter}&page=${page}&limit=5`);
+            setApplications(response.data.data);
+            setPagination(response.data.pagination);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        fetchApplications();
+    }, [searchTerm, statusFilter, page]);
     const handleAdd = (newApp) => {
         setApplications(prev => [...prev, newApp]);
         toast.success("Application added!");
@@ -116,7 +121,7 @@ const Applications = () => {
 
             {/* 🔹 Table */}
             <ApplicationTable
-                data={filteredApplications}
+                data={applications}
                 statusStyle={statusStyle}
                 onEdit={(app) => {
                     setEditingApp(app);
@@ -124,6 +129,31 @@ const Applications = () => {
                 }}
                 onDelete={handleDelete}
             />
+
+            {/* 🔹Pagination Buttons */}
+            <div className="flex justify-center items-center gap-4 mt-6">
+
+                <button
+                    disabled={page === 1}
+                    onClick={() => setPage(prev => prev - 1)}
+                    className="px-4 py-2 rounded-lg border border-gray-200 disabled:opacity-50"
+                >
+                    Previous
+                </button>
+
+                <p className="text-sm text-gray-500">
+                    Page {pagination.page} of {pagination.pages}
+                </p>
+
+                <button
+                    disabled={page === pagination.pages}
+                    onClick={() => setPage(prev => prev + 1)}
+                    className="px-4 py-2 rounded-lg border border-gray-200 disabled:opacity-50"
+                >
+                    Next
+                </button>
+
+            </div>
 
             {/*FORM Modal */}
 

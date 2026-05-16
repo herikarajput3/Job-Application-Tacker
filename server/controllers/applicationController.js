@@ -16,6 +16,11 @@ export const getApplications = asyncHandler(async (req, res) => {
 
   const { status, search } = req.query;
 
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+
+  const skip = (page - 1) * limit; // for page 2 it becomes 5 which means skip first 5 records
+
   let query = {};
 
   // Status filter
@@ -40,14 +45,24 @@ export const getApplications = asyncHandler(async (req, res) => {
       },
     ];
   }
-
-  const applications = await Application.find().sort({
-    createdAt: -1,
-  });
+  const totalApplications = await Application.countDocuments(query);
+  
+  const applications = await Application.find(query)
+    .sort({
+      createdAt: -1,
+    })
+    .skip(skip)
+    .limit(limit);
 
   res.status(200).json({
     success: true,
     message: "Applications fetched successfully",
+    pagination: {
+      total: totalApplications,
+      page,
+      limit,
+      pages: Math.ceil(totalApplications / limit),
+    },
     count: applications.length,
     data: applications,
   });
