@@ -1,21 +1,22 @@
 import express from "express";
 import { createApplication, deleteApplication, getApplicationById, getApplications, updateApplication } from "../controllers/applicationController.js";
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 
 // Create application
-router.post("/", createApplication);
+router.post("/", protect, createApplication);
 
 // Get all applications
-router.get("/", getApplications);
+router.get("/", protect, getApplications);
 
 // Get single application
-router.get("/:id", getApplicationById);
+router.get("/:id", protect, getApplicationById);
 
 // Update application
-router.put("/:id", updateApplication);
+router.put("/:id", protect, updateApplication);
 
 // Delete application
-router.delete("/:id", deleteApplication);
+router.delete("/:id", protect, deleteApplication);
 
 export default router;
