@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { HiOutlineLockClosed, HiOutlineMail, HiOutlineUser } from 'react-icons/hi';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import API from '../../service/api';
+import toast from 'react-hot-toast';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -11,6 +13,7 @@ const Register = () => {
         email: "",
         password: "",
     })
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e) => {
         setFormData({
@@ -19,9 +22,28 @@ const Register = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        try {
+            setIsSubmitting(true);
+            const response = await API.post("/auth/register", formData);
+
+            // save token
+            localStorage.setItem("token", response.data.token);
+
+            toast.success(
+                "Account created successfully"
+            );
+
+            navigate("/");
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message ||
+                "Registration failed"
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     const inputStyle = `
@@ -195,9 +217,19 @@ const Register = () => {
                             {/* submit */}
                             <button
                                 type="submit"
-                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl font-medium transition-all duration-200 shadow-lg shadow-indigo-200"
+                                disabled={isSubmitting}
+                                className={`w-full py-3.5 rounded-2xl font-medium transition-all duration-200
+                                    ${isSubmitting
+                                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                        :
+                                        "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200"
+                                    }
+                                    `}
                             >
-                                Create Account
+                                {isSubmitting
+                                    ? "Creating Account..."
+                                    : "Create Account"
+                                }
                             </button>
                         </form>
                         {/* Login Link */}

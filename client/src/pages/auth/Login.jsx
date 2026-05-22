@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { HiOutlineLockClosed, HiOutlineMail, HiOutlineUser } from 'react-icons/hi';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import API from '../../service/api';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -10,6 +11,8 @@ const Login = () => {
         email: "",
         password: "",
     })
+    const [isSubmitting, setIsSubmitting] =
+        useState(false);
 
     const handleChange = (e) => {
         setFormData({
@@ -20,7 +23,27 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+        try {
+            setIsSubmitting(true);
+
+            const response = await API.post("/auth/login", formData);
+
+            // save token
+            localStorage.setItem("token", response.data.token);
+
+            toast.success(
+                "Welcome back!"
+            );
+
+            navigate("/");
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message ||
+                "Login failed"
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     const inputStyle = `
@@ -181,12 +204,20 @@ const Login = () => {
                             {/* submit */}
                             <button
                                 type="submit"
-                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl font-medium transition-all duration-200 shadow-lg shadow-indigo-200"
+                                disabled={isSubmitting}
+                                className={`
+    w-full py-3.5 rounded-2xl font-medium
+    transition-all duration-200
+    ${isSubmitting
+                                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                        : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200"
+                                    }
+  `}
                             >
-                                Sign In
+                                {isSubmitting ? "Signing In..." : "Sign In"}
                             </button>
                         </form>
-                        {/* Login Link */}
+                        {/* Register Link */}
                         <p className="text-sm text-gray-500 mt-8 text-center">
                             Don't have an account?
 
