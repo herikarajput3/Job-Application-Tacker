@@ -4,9 +4,11 @@ import { HiOutlineLockClosed, HiOutlineMail, HiOutlineUser } from 'react-icons/h
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import API from '../../service/api';
 import toast from 'react-hot-toast';
+import { useAuth } from '../../context/AuthContext';
 
 const Register = () => {
     const navigate = useNavigate();
+    const { setUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -35,6 +37,7 @@ const Register = () => {
                 "Account created successfully"
             );
 
+            setUser(response.data.user);
             navigate("/");
         } catch (error) {
             toast.error(

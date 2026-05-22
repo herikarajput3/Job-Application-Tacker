@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     }
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
     // Only run this function if password was actually modified
     if (!this.isModified("password")) {
         next();
@@ -38,7 +38,7 @@ userSchema.pre("save", async function (next) {
     const salt = await bcrypt.genSalt(10);
     // Hash the password with the salt
     this.password = await bcrypt.hash(this.password, salt);
-    next();
+    return;
 });
 
 userSchema.methods.matchPassword = async function (

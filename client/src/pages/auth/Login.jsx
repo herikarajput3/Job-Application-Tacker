@@ -3,9 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { HiOutlineLockClosed, HiOutlineMail, HiOutlineUser } from 'react-icons/hi';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import API from '../../service/api';
+import { useAuth } from '../../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const Login = () => {
     const navigate = useNavigate();
+    const { setUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
@@ -21,7 +24,7 @@ const Login = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             setIsSubmitting(true);
@@ -34,6 +37,8 @@ const Login = () => {
             toast.success(
                 "Welcome back!"
             );
+
+            setUser(response.data.user);
 
             navigate("/");
         } catch (error) {
