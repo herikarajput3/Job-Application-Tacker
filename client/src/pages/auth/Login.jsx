@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { setUser } = useAuth();
+    const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
@@ -29,16 +29,16 @@ const Login = () => {
         try {
             setIsSubmitting(true);
 
-            const response = await API.post("/auth/login", formData);
-
-            // save token
-            localStorage.setItem("token", response.data.token);
-
-            toast.success(
-                "Welcome back!"
+            const response = await login(
+                formData.email,
+                formData.password
             );
 
-            setUser(response.data.user);
+            console.log(response.data.user, "login");
+
+            toast.success(
+                `Welcome ${response.data.user.name}`
+            );
 
             navigate("/");
         } catch (error) {

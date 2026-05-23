@@ -15,6 +15,10 @@ export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] =
     useState(true);
 
+  // Check auth status
+
+  const isAuthenticated = !!user;
+
   // Fetch Current User
 
   const fetchCurrentUser = async () => {
@@ -38,10 +42,11 @@ export const AuthProvider = ({ children }) => {
       );
 
       setUser(response.data.user);
+      console.log(response.data.user, "user");
 
     } catch (error) {
 
-      console.log(error);
+      console.log("Failed to fetch current user", error);
 
       localStorage.removeItem("token");
 
@@ -55,17 +60,30 @@ export const AuthProvider = ({ children }) => {
 
   };
 
-  // Load User On App Start
+  // Login
 
-  useEffect(() => {
+  const login = async (email, password) => {
+    const response = await API.post("/auth/login", { email, password });
 
-    fetchCurrentUser();
+    // save token
+    localStorage.setItem("token", response.data.token);
+    setUser(response.data.user);
 
-  }, []);
+    return response.data;
+  };
+
+  // Register
+
+  const register = async (name, email, password) => {
+    const response = await API.post("/auth/register", { name, email, password });
+
+    // save token
+    localStorage.setItem("token", response.data.token);
+    setUser(response.data.user);
+    return response.data;
+  }
 
   // Logout
-
-
 
   const logout = () => {
 
@@ -75,14 +93,28 @@ export const AuthProvider = ({ children }) => {
 
   };
 
+  // Load User On App Start
+
+  useEffect(() => {
+
+    fetchCurrentUser();
+
+  }, []);
+
   return (
 
     <AuthContext.Provider
       value={{
+        // state
         user,
-        setUser,
-        logout,
         authLoading,
+        isAuthenticated,
+
+        // actions
+        login,
+        register,
+        logout,
+        fetchCurrentUser,
       }}
     >
 
