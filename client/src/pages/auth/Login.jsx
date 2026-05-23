@@ -29,7 +29,6 @@ const Login = () => {
         try {
             setIsSubmitting(true);
 
-<<<<<<< HEAD
             const response = await login(formData);
 
             console.log(response.user, "login");
@@ -38,19 +37,6 @@ const Login = () => {
                 `Welcome ${response.user.name}`
             );
 
-=======
-            const response = await login(
-                formData.email,
-                formData.password
-            );
-
-            console.log(response.data.user, "login");
-
-            toast.success(
-                `Welcome ${response.data.user.name}`
-            );
-
->>>>>>> 1fb4d0d257a0d28135ee1cc8d4367fc0c226137e
             navigate("/");
         } catch (error) {
             console.error(
