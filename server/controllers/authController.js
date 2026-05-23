@@ -65,3 +65,18 @@ export const login = asyncHandler(async (req, res) => {
         },
     });
 })
+
+export const getMe = asyncHandler(
+  async (req, res) => {
+
+    const user = await User.findById(
+      req.user.id
+    );
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+
+  }
+);
