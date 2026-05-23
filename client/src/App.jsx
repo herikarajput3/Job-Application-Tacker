@@ -7,6 +7,7 @@ import ApplicationDetails from "./pages/applications/ApplicationDetails";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 const App = () => {
   return (
     <Router>
@@ -17,15 +18,27 @@ const App = () => {
         {/* Public Routes */}
 
         <Route
-          path="/register"
-          element={<Register />}
+          path="/login"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
         />
 
         <Route
           path="/login"
-          element={<Login />}
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
         />
 
+        <Route
+          path="*"
+          element={<Navigate to="/" />}
+        />
         {/* PROTECTED ROUTES */}
 
         <Route

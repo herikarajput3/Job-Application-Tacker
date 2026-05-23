@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const Register = () => {
     const navigate = useNavigate();
-    const { setUser } = useAuth();
+    const { register } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -28,16 +28,16 @@ const Register = () => {
         e.preventDefault();
         try {
             setIsSubmitting(true);
-            const response = await API.post("/auth/register", formData);
-
-            // save token
-            localStorage.setItem("token", response.data.token);
+            await register(
+                formData.name,
+                formData.email,
+                formData.password
+            );
 
             toast.success(
                 "Account created successfully"
             );
 
-            setUser(response.data.user);
             navigate("/");
         } catch (error) {
             toast.error(
