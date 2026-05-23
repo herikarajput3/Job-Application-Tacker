@@ -18,7 +18,11 @@ const App = () => {
         {/* Public Routes */}
 
         <Route
+<<<<<<< HEAD
           path="/register"
+=======
+          path="/login"
+>>>>>>> 1fb4d0d257a0d28135ee1cc8d4367fc0c226137e
           element={
             <PublicRoute>
               <Register />
@@ -35,6 +39,10 @@ const App = () => {
           }
         />
 
+        <Route
+          path="*"
+          element={<Navigate to="/" />}
+        />
         {/* PROTECTED ROUTES */}
 
         <Route

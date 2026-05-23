@@ -28,7 +28,15 @@ const Register = () => {
         e.preventDefault();
         try {
             setIsSubmitting(true);
+<<<<<<< HEAD
             await register(formData);
+=======
+            await register(
+                formData.name,
+                formData.email,
+                formData.password
+            );
+>>>>>>> 1fb4d0d257a0d28135ee1cc8d4367fc0c226137e
 
             toast.success(
                 "Account created successfully"

@@ -43,12 +43,11 @@ export const AuthProvider = ({ children }) => {
           "/auth/me"
         );
 
-        setUser(response.data.user);
-        console.log(response.data.user, "user");
+      setUser(response.data.user);
 
       } catch (error) {
 
-        console.log("Failed to fetch current user", error);
+      console.log(error);
 
         localStorage.removeItem("token");
 
@@ -100,7 +99,19 @@ export const AuthProvider = ({ children }) => {
 
     fetchCurrentUser();
 
-  }, [fetchCurrentUser]);
+  }, []);
+
+  // Logout
+
+
+
+  const logout = () => {
+
+    localStorage.removeItem("token");
+
+    setUser(null);
+
+  };
 
   return (
 
