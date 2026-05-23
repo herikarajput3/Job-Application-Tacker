@@ -29,19 +29,20 @@ const Login = () => {
         try {
             setIsSubmitting(true);
 
-            const response = await login(
-                formData.email,
-                formData.password
-            );
+            const response = await login(formData);
 
-            console.log(response.data.user, "login");
+            console.log(response.user, "login");
 
             toast.success(
-                `Welcome ${response.data.user.name}`
+                `Welcome ${response.user.name}`
             );
 
             navigate("/");
         } catch (error) {
+            console.error(
+                "Error while login",
+                error.response?.data || error
+            );
             toast.error(
                 error.response?.data?.message ||
                 "Login failed"

@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -21,49 +22,52 @@ export const AuthProvider = ({ children }) => {
 
   // Fetch Current User
 
-  const fetchCurrentUser = async () => {
+  const fetchCurrentUser = useCallback(
+    async () => {
 
-    const token =
-      localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token");
 
-    // No token
-    if (!token) {
+      // No token
+      if (!token) {
 
-      setAuthLoading(false);
+        setAuthLoading(false);
 
-      return;
+        return;
 
-    }
+      }
 
-    try {
+      try {
 
-      const response = await API.get(
-        "/auth/me"
-      );
+        const response = await API.get(
+          "/auth/me"
+        );
 
-      setUser(response.data.user);
-      console.log(response.data.user, "user");
+        setUser(response.data.user);
+        console.log(response.data.user, "user");
 
-    } catch (error) {
+      } catch (error) {
 
-      console.log("Failed to fetch current user", error);
+        console.log("Failed to fetch current user", error);
 
-      localStorage.removeItem("token");
+        localStorage.removeItem("token");
 
-      setUser(null);
+        setUser(null);
 
-    } finally {
+      } finally {
 
-      setAuthLoading(false);
+        setAuthLoading(false);
 
-    }
+      }
 
-  };
+    },
+    []
+  );
 
   // Login
 
-  const login = async (email, password) => {
-    const response = await API.post("/auth/login", { email, password });
+  const login = async (formData) => {
+    const response = await API.post("/auth/login", formData);
 
     // save token
     localStorage.setItem("token", response.data.token);
@@ -74,8 +78,8 @@ export const AuthProvider = ({ children }) => {
 
   // Register
 
-  const register = async (name, email, password) => {
-    const response = await API.post("/auth/register", { name, email, password });
+  const register = async (formData) => {
+    const response = await API.post("/auth/register", formData);
 
     // save token
     localStorage.setItem("token", response.data.token);
@@ -86,11 +90,8 @@ export const AuthProvider = ({ children }) => {
   // Logout
 
   const logout = () => {
-
     localStorage.removeItem("token");
-
     setUser(null);
-
   };
 
   // Load User On App Start
@@ -99,7 +100,7 @@ export const AuthProvider = ({ children }) => {
 
     fetchCurrentUser();
 
-  }, []);
+  }, [fetchCurrentUser]);
 
   return (
 

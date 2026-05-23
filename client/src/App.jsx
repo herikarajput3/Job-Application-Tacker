@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import Layout from "./layouts/Layout"
 import Dashboard from "./pages/dashboard/Dashboard"
 import Applications from "./pages/applications/Applications"
@@ -18,7 +18,7 @@ const App = () => {
         {/* Public Routes */}
 
         <Route
-          path="/login"
+          path="/register"
           element={
             <PublicRoute>
               <Register />
@@ -35,10 +35,6 @@ const App = () => {
           }
         />
 
-        <Route
-          path="*"
-          element={<Navigate to="/" />}
-        />
         {/* PROTECTED ROUTES */}
 
         <Route
@@ -60,6 +56,13 @@ const App = () => {
             element={<ApplicationDetails />}
           />
         </Route>
+
+        {/* Wildcard Route */}
+
+        <Route
+          path="*"
+          element={<Navigate to="/" />}
+        />
       </Routes>
     </Router>
   )

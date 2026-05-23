@@ -14,17 +14,17 @@ import {
     FiLogOut,
     FiPlus,
 } from "react-icons/fi";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = ({ onAddClick }) => {
 
     const navigate = useNavigate();
+    const { user, logout } = useAuth();
 
     const [isOpen, setIsOpen] =
         useState(false);
 
-    // =========================================
     // Logout
-    // =========================================
 
     const handleLogout = () => {
 
@@ -34,9 +34,7 @@ const Navbar = ({ onAddClick }) => {
 
     };
 
-    // =========================================
     // Nav Style
-    // =========================================
 
     const navLinkStyle = ({ isActive }) =>
 
@@ -147,7 +145,7 @@ const Navbar = ({ onAddClick }) => {
                 font-semibold text-sm
               ">
 
-                                {user?.name?.charAt(0).toUpperCase()}
+                                {user?.name?.[0]?.toUpperCase()}
 
                             </div>
 
@@ -233,7 +231,7 @@ const Navbar = ({ onAddClick }) => {
                 font-semibold
               ">
 
-                                {user?.name?.charAt(0).toUpperCase()}
+                                {user?.name?.[0]?.toUpperCase()}
 
                             </div>
 

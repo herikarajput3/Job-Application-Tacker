@@ -28,11 +28,7 @@ const Register = () => {
         e.preventDefault();
         try {
             setIsSubmitting(true);
-            await register(
-                formData.name,
-                formData.email,
-                formData.password
-            );
+            await register(formData);
 
             toast.success(
                 "Account created successfully"
@@ -40,6 +36,10 @@ const Register = () => {
 
             navigate("/");
         } catch (error) {
+            console.error(
+                "Error while registering",
+                error.response?.data || error
+            );
             toast.error(
                 error.response?.data?.message ||
                 "Registration failed"
