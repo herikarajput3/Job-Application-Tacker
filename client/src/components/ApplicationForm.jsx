@@ -128,7 +128,7 @@ const ApplicationForm = ({
     };
 
     return (
-        <div className="bg-white rounded-[2rem] shadow-2xl border border-gray-100">
+        <div className="bg-white rounded-4xl shadow-2xl border border-gray-100">
 
             {/* HEADER */}
             <div className="flex items-start justify-between px-8 py-6 border-b border-gray-100">

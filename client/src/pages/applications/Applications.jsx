@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react'
 import ApplicationForm from '../../components/ApplicationForm';
 import ApplicationTable from '../../components/ApplicationTable';
 import Modal from '../../components/Modal';
-import { useOutletContext } from "react-router-dom";
 import toast from 'react-hot-toast';
 import API from '../../service/api';
 
 const Applications = () => {
 
-    const { applications, setApplications } = useOutletContext();
-
+    const [applications, setApplications] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
     const [page, setPage] = useState(1);
@@ -29,42 +28,48 @@ const Applications = () => {
 
     const fetchApplications = async () => {
         try {
+            setLoading(true);
             const response = await API.get(`/applications?search=${searchTerm}&status=${statusFilter}&page=${page}&limit=5`);
             setApplications(response.data.data);
             setPagination(response.data.pagination);
         } catch (error) {
-            console.log(error);
+            console.error("Error fetching applications", error);
+            toast.error("Failed to fetch applications");
+        } finally {
+            setLoading(false);
         }
-    }
+    };
     useEffect(() => {
         fetchApplications();
     }, [searchTerm, statusFilter, page]);
-    const handleAdd = (newApp) => {
-        setApplications(prev => [...prev, newApp]);
-        toast.success("Application added!");
-    };
 
-    const handleUpdate = (updatedApp) => {
-        setApplications(prev =>
-            prev.map(app =>
-                app._id === updatedApp._id ? updatedApp : app
-            )
-        );
-        toast.success("Application updated!");
-    };
+    // Loading UI
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                Loading...
+            </div>
+        )
+    }
+
+    // Delete Modal Open
 
     const handleDelete = (id) => {
         setDeleteId(id);
     };
 
+    // Confirm Delete
+
     const confirmDelete = async () => {
         try {
             await API.delete(`/applications/${deleteId}`);
-            setApplications(prev => prev.filter(app => app._id !== deleteId));
+            await fetchApplications();
             setDeleteId(null);
             toast.success("Application deleted!");
         } catch (error) {
             console.error("Error deleting application", error);
+            toast.error("Failed to delete application");
         }
     };
 
@@ -165,9 +170,16 @@ const Applications = () => {
                 }}
             >
                 <ApplicationForm
-                    onAdd={handleAdd}
-                    onUpdate={handleUpdate}
-                    editingApp={editingApp}
+                    editingApp={editingApp} // form prefills existing data
+                    onAdd={async () => {
+                        await fetchApplications();
+                        setIsModalOpen(false);
+                    }}
+                    onUpdate={async()=>{
+                        await fetchApplications();
+                        setIsModalOpen(false);
+                        setEditingApp(null);
+                    }}
                     onClose={() => {
                         setIsModalOpen(false);
                         setEditingApp(null);

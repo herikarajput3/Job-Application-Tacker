@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import StatCard from '../../components/StatCard';
 
 import {
@@ -12,17 +12,16 @@ import {
 import {
   Link,
   useNavigate,
-  useOutletContext
 } from 'react-router-dom';
+import API from '../../service/api';
 
 const Dashboard = () => {
 
-  const { applications } = useOutletContext();
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // ===============================
   // Dashboard Metrics
-  // ===============================
 
   const total = applications.length;
 
@@ -49,9 +48,7 @@ const Dashboard = () => {
       ? ((offers / total) * 100).toFixed(1)
       : 0;
 
-  // ===============================
   // Status UI Colors
-  // ===============================
 
   const statusStyle = {
 
@@ -96,9 +93,7 @@ const Dashboard = () => {
     },
   };
 
-  // ===============================
   // Recent Applications
-  // ===============================
 
   const recentApplications = applications.slice(0, 5);
 
@@ -115,21 +110,38 @@ const Dashboard = () => {
     })
     .slice(0, 3);
 
+  // Fetch Applications
+  const fetchApplications = async () => {
+    try {
+      setLoading(true);
+      const response = await API.get("/applications");
+      setApplications(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching applications", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
+
   return (
 
     <div className="min-h-screen bg-[#f8fafc]">
 
       <div className="max-w-7xl mx-auto px-6 py-8">
 
-        {/* ========================================= */}
         {/* HERO SECTION */}
-        {/* ========================================= */}
 
         <div className="grid lg:grid-cols-[1.6fr_1fr] gap-6 mb-8">
 
           {/* LEFT HERO */}
 
-          <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl p-8 text-white">
+          <div className="relative overflow-hidden bg-linear-to-br from-indigo-600 to-purple-600 rounded-3xl p-8 text-white">
 
             {/* Glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
@@ -314,9 +326,7 @@ const Dashboard = () => {
 
         </div>
 
-        {/* ========================================= */}
         {/* RECENT APPLICATIONS */}
-        {/* ========================================= */}
 
         <div className="mt-8 bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
 
