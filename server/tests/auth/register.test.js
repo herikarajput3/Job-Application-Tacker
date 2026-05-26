@@ -3,16 +3,6 @@ dotenv.config();
 
 import request from "supertest";
 import app from "../../app.js";
-import mongoose from "mongoose";
-import connectDB from "../../config/db.js";
-
-beforeAll(async () => {
-    await connectDB();
-});
-
-afterAll(async () => {
-    await mongoose.connection.close();
-});
 
 describe("POST/api/auth/register", () => {
     it("should register a new user", async () => {
