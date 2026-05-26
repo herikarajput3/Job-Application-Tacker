@@ -17,4 +17,36 @@ describe("POST/api/auth/register", () => {
         expect(response.body.success).toBe(true);
         expect(response.body.token).toBeDefined();
     })
+
+    it("should reject duplicate email registration", async () => {
+        // first user
+        await request(app)
+            .post("/api/auth/register")
+            .send({
+
+                name: "Herika",
+
+                email: "duplicate@test.com",
+
+                password: "123456",
+
+            });
+
+        // Duplicate user
+        const response =
+            await request(app)
+                .post("/api/auth/register")
+                .send({
+
+                    name: "Another",
+
+                    email: "duplicate@test.com",
+
+                    password: "123456",
+
+                });
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.success).toBe(false);
+    })
 })
