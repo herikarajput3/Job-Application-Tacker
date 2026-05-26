@@ -29,7 +29,7 @@ const Applications = () => {
     const fetchApplications = async () => {
         try {
             setLoading(true);
-            const response = await API.get(`/applications?search=${searchTerm}&status=${statusFilter}&page=${page}&limit=5`);
+                const response = await API.get(`/applications?search=${searchTerm}&status=${statusFilter}&page=${page}&limit=5`);
             setApplications(response.data.data);
             setPagination(response.data.pagination);
         } catch (error) {

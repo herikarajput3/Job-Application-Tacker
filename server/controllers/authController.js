@@ -11,13 +11,14 @@ export const register = asyncHandler(async (req, res) => {
     if (existingUser) {
         throw new ErrorResponse("User already exists", 400);
     }
+    console.log(existingUser, "existing user");
 
     // Create user
     const user = await User.create({ name, email, password });
-
+    console.log(user, "user created");
     // Generate token
     const token = generateToken(user._id);
-
+    console.log(token, "token generated");
     res.status(201).json({
         success: true,
         message: "User created successfully",
@@ -67,12 +68,12 @@ export const login = asyncHandler(async (req, res) => {
 })
 
 export const getMe = asyncHandler(
-  async (req, res) => {
+    async (req, res) => {
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
+        res.status(200).json({
+            success: true,
+            user,
+        });
 
-  }
+    }
 );
