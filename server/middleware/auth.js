@@ -18,12 +18,15 @@ export const protect = asyncHandler(async (req, res, next) => {
     if (!token) {
         throw new ErrorResponse("Not authorized to access this route", 401);
     }
+    try {
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // find user
+        req.user = await User.findById(decoded.id);
 
-    // find user
-    req.user = await User.findById(decoded.id);
-
-    next();
-});
+        next();
+    } catch (error) {
+        throw new ErrorResponse("Not authorized to access this route", 401);
+    }
+    });
