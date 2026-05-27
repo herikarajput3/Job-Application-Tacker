@@ -46,6 +46,22 @@ describe(
 
             }
         );
+        it(
+            "should reject missing authorization header",
+            async () => {
+
+                const response =
+                    await request(app)
+                        .get("/api/applications");
+
+                expect(response.statusCode)
+                    .toBe(401);
+
+                expect(response.body.success)
+                    .toBe(false);
+
+            }
+        );
 
     }
 );
