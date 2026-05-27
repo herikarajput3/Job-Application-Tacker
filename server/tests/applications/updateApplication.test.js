@@ -62,5 +62,56 @@ describe("PATCH /api/applications/:id", () => {
 
         }
     );
+    it(
+        "should reject invalid status update",
+        async () => {
 
+            const user =
+                await createUserAndToken(
+                    "Herika",
+                    "invalid-update@test.com"
+                );
+
+            // Create application
+            const createdApplication =
+                await request(app)
+                    .post("/api/applications")
+                    .set(
+                        "Authorization",
+                        `Bearer ${user.token}`
+                    )
+                    .send({
+
+                        company: "Google",
+
+                        role: "Frontend Engineer",
+
+                        status: "Applied",
+
+                    });
+
+            // Invalid update
+            const response =
+                await request(app)
+                    .put(
+                        `/api/applications/${createdApplication.body.data._id}`
+                    )
+                    .set(
+                        "Authorization",
+                        `Bearer ${user.token}`
+                    )
+                    .send({
+
+                        status: "INVALID_STATUS",
+
+                    });
+
+            expect(response.statusCode)
+                .toBe(400);
+
+            expect(response.body.success)
+                .toBe(false);
+
+        }
+    );
 });
