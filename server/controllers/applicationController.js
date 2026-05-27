@@ -77,7 +77,7 @@ export const getApplications = asyncHandler(async (req, res) => {
 // Get single application
 export const getApplicationById = asyncHandler(async (req, res) => {
 
-  const application = await Application.findById({
+  const application = await Application.findOne({
     _id: req.params.id,
     user: req.user.id,
   });
@@ -96,7 +96,7 @@ export const getApplicationById = asyncHandler(async (req, res) => {
 // Update application
 export const updateApplication = asyncHandler(async (req, res) => {
 
-  const updatedApplication = await Application.findByIdAndUpdate(
+  const updatedApplication = await Application.findOneAndUpdate(
     {
       _id: req.params.id,
       user: req.user.id,
@@ -123,7 +123,7 @@ export const updateApplication = asyncHandler(async (req, res) => {
 // Delete application
 export const deleteApplication = asyncHandler(async (req, res) => {
 
-  const deletedApplication = await Application.findByIdAndDelete(
+  const deletedApplication = await Application.findOneAndDelete(
     {
       _id: req.params.id,
       user: req.user.id,
