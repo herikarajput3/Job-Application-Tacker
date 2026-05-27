@@ -22,6 +22,20 @@ export const getApplications = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
 
+  if (
+    isNaN(page) ||
+    isNaN(limit) ||
+    page < 1 ||
+    limit < 1
+  ) {
+
+    throw new ErrorResponse(
+      "Invalid pagination values",
+      400
+    );
+
+  }
+
   const skip = (page - 1) * limit; // for page 2 it becomes 5 which means skip first 5 records
 
   let query = {
