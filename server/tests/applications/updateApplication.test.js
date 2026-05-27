@@ -58,7 +58,7 @@ describe("PATCH /api/applications/:id", () => {
                 .toBe(true);
 
             expect(response.body.data.status)
-                .toBe("Interview");
+                .toBe("Interviewed");
 
         }
     );

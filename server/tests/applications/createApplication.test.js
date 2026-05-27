@@ -67,4 +67,37 @@ describe("POST/api/applications", () => {
 
         }
     );
+    it(
+        "should reject missing required fields",
+        async () => {
+
+            const user =
+                await createUserAndToken(
+                    "Herika",
+                    "required@test.com"
+                );
+
+            const response =
+                await request(app)
+                    .post("/api/applications")
+                    .set(
+                        "Authorization",
+                        `Bearer ${user.token}`
+                    )
+                    .send({
+
+                        company: "",
+
+                        role: "",
+
+                    });
+
+            expect(response.statusCode)
+                .toBe(400);
+
+            expect(response.body.success)
+                .toBe(false);
+
+        }
+    );
 })

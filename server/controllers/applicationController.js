@@ -43,6 +43,31 @@ export const getApplications = asyncHandler(async (req, res) => {
   };
 
   // Status filter
+
+  const allowedStatuses = [
+    "Saved",
+    "Applied",
+    "Assessment",
+    "Interview Scheduled",
+    "Interviewed",
+    "Offer",
+    "Rejected",
+    "Ghosted",
+  ];
+
+  if (
+    status &&
+    status !== "All" &&
+    !allowedStatuses.includes(status)
+  ) {
+
+    throw new ErrorResponse(
+      "Invalid status filter",
+      400
+    );
+
+  }
+
   if (status && status !== "All") {
     query.status = status;
   }
@@ -117,7 +142,7 @@ export const updateApplication = asyncHandler(async (req, res) => {
     },
     req.body,
     {
-      new: true,
+      returnDocument: "after",
       runValidators: true,
     }
   );

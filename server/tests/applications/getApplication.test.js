@@ -55,4 +55,32 @@ describe("GET/api/applications", () => {
 
         }
     );
+    it(
+        "should reject invalid status filter",
+        async () => {
+
+            const user =
+                await createUserAndToken(
+                    "Herika",
+                    "filter@test.com"
+                );
+
+            const response =
+                await request(app)
+                    .get(
+                        "/api/applications?status=INVALID"
+                    )
+                    .set(
+                        "Authorization",
+                        `Bearer ${user.token}`
+                    );
+
+            expect(response.statusCode)
+                .toBe(400);
+
+            expect(response.body.success)
+                .toBe(false);
+
+        }
+    );
 });
