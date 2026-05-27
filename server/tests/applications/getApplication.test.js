@@ -83,4 +83,57 @@ describe("GET/api/applications", () => {
 
         }
     );
+    it(
+        "should reject negative pagination values",
+        async () => {
+
+            const user =
+                await createUserAndToken(
+                    "Herika",
+                    "negative@test.com"
+                );
+
+            const response =
+                await request(app)
+                    .get(
+                        "/api/applications?page=-5&limit=-10"
+                    )
+                    .set(
+                        "Authorization",
+                        `Bearer ${user.token}`
+                    );
+
+            expect(response.statusCode)
+                .toBe(400);
+
+            expect(response.body.success)
+                .toBe(false);
+
+        }
+    );
+    it(
+        "should safely handle malformed search query",
+        async () => {
+
+            const user =
+                await createUserAndToken(
+                    "Herika",
+                    "search@test.com"
+                );
+
+            const response =
+                await request(app)
+                    .get(
+                        "/api/applications?search[$gt]="
+                    )
+                    .set(
+                        "Authorization",
+                        `Bearer ${user.token}`
+                    );
+
+            expect(response.statusCode)
+                .not.toBe(500);
+
+        }
+    );
 });
