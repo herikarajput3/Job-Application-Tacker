@@ -1,6 +1,9 @@
 const errorMiddleware = (err, req, res, next) => {
 
-    let error = err;
+    let error = { ...err };
+    error.message = err.message;
+
+    // Log full error internally
     logger.error(err.stack);
 
     // Wrong MongoDB ObjectId
@@ -19,9 +22,20 @@ const errorMiddleware = (err, req, res, next) => {
         error.statusCode = 400;
     }
 
-    res.status(error.statusCode || 500).json({
+    // Default status code
+    const statusCode = error.statusCode || 500;
+
+    res.status(statusCode).json({
         success: false,
-        message: error.message || "Server Error",
+        // production safe message
+        message: process.env.NODE_ENV === "production"
+            ? statusCode === 500
+                ? "Internal Server Error"
+                : error.message
+            : error.message,
+        // Hide stack in production
+        stack: process.env.NODE_ENV === "production"
+            ? null : error.stack,
     });
 
 };
