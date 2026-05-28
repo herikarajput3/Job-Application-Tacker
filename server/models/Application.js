@@ -117,6 +117,16 @@ const applicationSchema = new mongoose.Schema(
   }
 );
 
+applicationSchema.index({
+  user: 1,
+  createdAt: -1,
+});
+
+applicationSchema.index({
+  user: 1,
+  status: 1,
+});
+
 const Application = mongoose.model(
   "Application",
   applicationSchema

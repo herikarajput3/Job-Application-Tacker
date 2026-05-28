@@ -1,6 +1,7 @@
 import asyncHandler from "../middleware/async.js";
 import Application from "../models/Application.js"
 import ErrorResponse from "../utils/errorResponse.js";
+import { performance } from "perf_hooks";
 
 export const createApplication = asyncHandler(async (req, res) => {
   const application = await Application.create({
@@ -91,12 +92,49 @@ export const getApplications = asyncHandler(async (req, res) => {
   }
   const totalApplications = await Application.countDocuments(query);
 
+  // const applications = await Application.find(query)
+  //   .sort({
+  //     createdAt: -1,
+  //   })
+  //   .skip(skip)
+  //   .limit(limit);
+
+  const start = performance.now();
+  console.log(start, "start");
+
   const applications = await Application.find(query)
     .sort({
       createdAt: -1,
     })
     .skip(skip)
     .limit(limit);
+
+  const end = performance.now();
+  console.log(end, "end");
+
+  console.log(
+    `Query Execution Time: ${end - start} ms`
+  );
+
+  // it is used to explain the performance of the query
+  // const explainResult = await Application.find(query)
+  //   .sort({
+  //     createdAt: -1,
+  //   })
+  //   .skip(skip)
+  //   .limit(limit)
+  //   .explain("executionStats");
+
+  // console.log(
+  //   JSON.stringify(explainResult, null, 2)
+  // );
+
+  // const applications = await Application.find(query)
+  //   .sort({
+  //     createdAt: -1,
+  //   })
+  //   .skip(skip)
+  //   .limit(limit);
 
   res.status(200).json({
     success: true,
