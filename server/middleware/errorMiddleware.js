@@ -1,6 +1,7 @@
 const errorMiddleware = (err, req, res, next) => {
 
     let error = err;
+    logger.error(err.stack);
 
     // Wrong MongoDB ObjectId
     if (err.name === "CastError") {
