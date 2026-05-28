@@ -6,6 +6,10 @@ import authRoutes from './routes/authRoutes.js'
 
 const app = express();
 
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan("dev"));
+}
+
 // Middleware
 app.use(cors());
 app.use(express.json());
