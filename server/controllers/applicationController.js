@@ -21,8 +21,11 @@ export const getApplications = asyncHandler(async (req, res) => {
   const { status, search } = req.query;
 
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
-
+  const limit =
+    Math.min(
+      parseInt(req.query.limit) || 5,
+      50
+    );
   if (
     isNaN(page) ||
     isNaN(limit) ||
@@ -99,6 +102,19 @@ export const getApplications = asyncHandler(async (req, res) => {
   //   .skip(skip)
   //   .limit(limit);
 
+  // it is used to explain the performance of the query
+  const explainResult = await Application.find(query)
+    .sort({
+      createdAt: -1,
+    })
+    .skip(skip)
+    .limit(limit)
+    .explain("executionStats");
+
+  console.log(
+    JSON.stringify(explainResult, null, 2)
+  );
+
   const start = performance.now();
   console.log(start, "start");
 
@@ -115,26 +131,6 @@ export const getApplications = asyncHandler(async (req, res) => {
   console.log(
     `Query Execution Time: ${end - start} ms`
   );
-
-  // it is used to explain the performance of the query
-  // const explainResult = await Application.find(query)
-  //   .sort({
-  //     createdAt: -1,
-  //   })
-  //   .skip(skip)
-  //   .limit(limit)
-  //   .explain("executionStats");
-
-  // console.log(
-  //   JSON.stringify(explainResult, null, 2)
-  // );
-
-  // const applications = await Application.find(query)
-  //   .sort({
-  //     createdAt: -1,
-  //   })
-  //   .skip(skip)
-  //   .limit(limit);
 
   res.status(200).json({
     success: true,

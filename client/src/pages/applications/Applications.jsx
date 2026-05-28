@@ -21,7 +21,7 @@ const Applications = () => {
 
     const statusStyle = {
         Applied: "bg-blue-100 text-blue-600",
-        Interview: "bg-yellow-100 text-yellow-700",
+        Interviewed: "bg-yellow-100 text-yellow-700",
         Offer: "bg-green-100 text-green-600",
         Rejected: "bg-red-100 text-red-600"
     }
