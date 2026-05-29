@@ -155,4 +155,51 @@ describe("Login Page", () => {
             password: "123456",
         });
     });
+    test("shows loading state during login submission", async () => {
+        const user = userEvent.setup();
+
+        let resolveLogin;
+
+        const loginPromise =
+            new Promise((resolve) => {
+                resolveLogin = resolve;
+            });
+
+        mockLogin.mockReturnValue(loginPromise);
+
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        );
+
+        await user.type(
+            screen.getByPlaceholderText(/email/i),
+            "herika@test.com"
+        );
+
+        await user.type(
+            screen.getByPlaceholderText(/password/i),
+            "123456"
+        );
+
+        const submitButton =
+            screen.getByRole("button", {
+                name: /sign in/i,
+            });
+
+        await user.click(submitButton);
+
+        expect(
+            screen.getByRole("button", {
+                name: /signing in/i,
+            })
+        ).toBeDisabled();
+
+        resolveLogin({
+            user: {
+                name: "Herika",
+            },
+        });
+    });
 });
