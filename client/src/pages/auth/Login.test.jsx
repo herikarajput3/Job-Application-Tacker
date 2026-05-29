@@ -4,13 +4,18 @@ import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import Login from "./Login";
 
+const mockLogin = vi.fn();
 vi.mock("../../context/AuthContext", () => ({
     useAuth: () => ({
-        login: vi.fn(),
+        login: mockLogin,
         user: null,
         logout: vi.fn(),
     }),
 }));
+
+beforeEach(() => {
+    vi.clearAllMocks();
+});
 
 describe("Login Page", () => {
     test("renders login form", () => {
@@ -110,5 +115,44 @@ describe("Login Page", () => {
                 "type",
                 "password"
             );
+    });
+
+    test("calls login with form data on submit", async () => {
+        const user = userEvent.setup();
+
+        mockLogin.mockResolvedValue({
+            user: {
+                name: "Herika",
+            },
+        });
+
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        );
+
+        await user.type(
+            screen.getByPlaceholderText(/email/i),
+            "herika@test.com"
+        );
+
+        await user.type(
+            screen.getByPlaceholderText(/password/i),
+            "123456"
+        );
+
+        await user.click(
+            screen.getByRole("button", {
+                name: /sign in/i,
+            })
+        );
+
+        expect(mockLogin).toHaveBeenCalledTimes(1);
+
+        expect(mockLogin).toHaveBeenCalledWith({
+            email: "herika@test.com",
+            password: "123456",
+        });
     });
 });
