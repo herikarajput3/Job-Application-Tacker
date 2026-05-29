@@ -11,8 +11,18 @@ if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
 
+const allowedOrigin =
+    process.env.NODE_ENV === "production"
+        ? process.env.CLIENT_URL
+        : "http://localhost:5173";
+
 // Middleware
-app.use(cors());
+app.use(
+    cors({
+        origin: allowedOrigin,
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
