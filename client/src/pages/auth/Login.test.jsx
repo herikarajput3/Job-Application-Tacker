@@ -34,7 +34,7 @@ describe("Login Page", () => {
             })
         ).toBeInTheDocument();
     });
-    
+
     test("allows user to type in email and password", async () => {
         const user = userEvent.setup();
 
@@ -67,5 +67,48 @@ describe("Login Page", () => {
         expect(passwordInput).toHaveValue(
             "123456"
         );
+    });
+
+    test("toggles password visibility", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        );
+
+        const passwordInput =
+            screen.getByPlaceholderText(/password/i);
+
+        const toggleButton =
+            screen.getByRole("button", {
+                name: /toggle password visibility/i,
+            });
+
+        // Initially hidden
+        expect(passwordInput)
+            .toHaveAttribute(
+                "type",
+                "password"
+            );
+
+        // Show password
+        await user.click(toggleButton);
+
+        expect(passwordInput)
+            .toHaveAttribute(
+                "type",
+                "text"
+            );
+
+        // Hide password again
+        await user.click(toggleButton);
+
+        expect(passwordInput)
+            .toHaveAttribute(
+                "type",
+                "password"
+            );
     });
 });
