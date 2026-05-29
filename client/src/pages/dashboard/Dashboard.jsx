@@ -14,39 +14,29 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import API from '../../service/api';
+import { useAuth } from '../../context/AuthContext';
 
 const Dashboard = () => {
-
-  const [applications, setApplications] = useState([]);
+  const { user } = useAuth();
+  const [stats, setStats] = useState(null);
+  const [recentApplications, setRecentApplications] = useState([]);
+  const [upcomingFollowUps, setUpcomingFollowUps] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   // Dashboard Metrics
 
-  const total = applications.length;
+  const total = stats?.total || 0;
 
-  const interviews = applications.filter(
-    (a) =>
-      a.status === "Interview Scheduled" ||
-      a.status === "Interviewed"
-  ).length;
+  const interviews = stats?.interviews || 0;
 
-  const offers = applications.filter(
-    (a) => a.status === "Offer"
-  ).length;
+  const offers = stats?.offers || 0;
 
-  const highPriority = applications.filter(
-    (a) => a.priority === "High"
-  ).length;
+  const highPriority = stats?.highPriority || 0;
 
-  const followUps = applications.filter(
-    (a) => a.followUpDate
-  ).length;
+  const followUps = stats?.followUps || 0;
 
-  const offerRate =
-    total > 0
-      ? ((offers / total) * 100).toFixed(1)
-      : 0;
+  const offerRate = stats?.offerRate || 0;
 
   // Status UI Colors
 
@@ -93,29 +83,18 @@ const Dashboard = () => {
     },
   };
 
-  // Recent Applications
-
-  const recentApplications = applications.slice(0, 5);
-
-  const upcomingFollowUps = applications
-    .filter((app) => {
-
-      if (!app.followUpDate) return false;
-
-      const today = new Date();
-      const followUp = new Date(app.followUpDate);
-
-      return followUp >= today;
-
-    })
-    .slice(0, 3);
-
   // Fetch Applications
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const response = await API.get("/applications");
-      setApplications(response.data.data);
+      const response = await API.get("/dashboard");
+      setStats(response.data.stats);
+      setRecentApplications(
+        response.data.recentApplications
+      );
+      setUpcomingFollowUps(
+        response.data.upcomingFollowUps
+      );
       setLoading(false);
     } catch (error) {
       console.error("Error fetching applications", error);
@@ -153,7 +132,7 @@ const Dashboard = () => {
               </p>
 
               <h1 className="text-3xl md:text-4xl font-bold mt-4 leading-tight">
-                Welcome back 👋
+                Welcome back, {user.name} 👋
               </h1>
 
               <p className="mt-4 text-indigo-100 max-w-lg leading-relaxed">

@@ -1,3 +1,4 @@
+import logger from "../utils/logger.js";
 const errorMiddleware = (err, req, res, next) => {
 
     let error = { ...err };
