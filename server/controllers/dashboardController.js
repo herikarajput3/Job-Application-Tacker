@@ -130,6 +130,23 @@ export const getDashboardData = asyncHandler(
                     .limit(3),
             ]);
 
+        const statusDistribution =
+            await Application.aggregate([
+                {
+                    $match: {
+                        user: req.user._id,
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$status",
+                        count: {
+                            $sum: 1,
+                        },
+                    },
+                },
+            ]);
+
         res.status(200).json({
             success: true,
 
@@ -144,7 +161,9 @@ export const getDashboardData = asyncHandler(
 
             recentApplications,
 
-            upcomingFollowUps
+            upcomingFollowUps,
+
+            statusDistribution
         });
 
     }
