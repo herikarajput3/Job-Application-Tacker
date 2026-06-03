@@ -145,6 +145,13 @@ export const getDashboardData = asyncHandler(
                         },
                     },
                 },
+                {
+                    $project: {
+                        _id: 0,
+                        status: "$_id",
+                        count: 3,
+                    },
+                },
             ]);
 
         res.status(200).json({
