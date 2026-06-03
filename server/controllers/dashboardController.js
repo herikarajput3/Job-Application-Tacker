@@ -113,24 +113,22 @@ export const getDashboardData = asyncHandler(
         const followUps =
             dashboardStats.followUps;
 
-        const recentApplications =
-            await Application.find({
-                user: req.user.id,
-            })
-                .sort({ createdAt: -1 })
-                .limit(5);
-
-        const upcomingFollowUps =
-            await Application.find({
-                user: req.user.id,
-                followUpDate: {
-                    $gte: new Date(),
-                },
-            })
-                .sort({
-                    followUpDate: 1,
+        const [recentApplications,
+            upcomingFollowUps] = await Promise.all([
+                Application.find({
+                    user: req.user._id,
                 })
-                .limit(3);
+                    .sort({ createdAt: -1 })
+                    .limit(5),
+                Application.find({
+                    user: req.user._id,
+                    followUpDate: {
+                        $gte: new Date(),
+                    },
+                })
+                    .sort({ followUpDate: 1 })
+                    .limit(3),
+            ]);
 
         res.status(200).json({
             success: true,
