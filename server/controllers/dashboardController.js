@@ -3,7 +3,7 @@ import Application from "../models/Application.js";
 
 export const getDashboardData = asyncHandler(
     async (req, res) => {
-
+        const now = new Date();
         const stats = await Application.aggregate([
             {
                 $match: {
@@ -71,7 +71,7 @@ export const getDashboardData = asyncHandler(
                                 {
                                     $gte: [
                                         "$followUpDate",
-                                        new Date(),
+                                        now,
                                     ],
                                 },
                                 1,
@@ -82,8 +82,6 @@ export const getDashboardData = asyncHandler(
                 },
             },
         ]);
-
-        console.log(stats);
 
         const dashboardStats = stats[0] || {
             total: 0,
@@ -105,13 +103,18 @@ export const getDashboardData = asyncHandler(
         const highPriority =
             dashboardStats.highPriority;
 
+        const followUps =
+            dashboardStats.followUps;
+
         const offerRate =
             total > 0
                 ? ((offers / total) * 100).toFixed(1)
                 : 0;
 
-        const followUps =
-            dashboardStats.followUps;
+        const interviewRate =
+            total > 0
+                ? ((interviews / total) * 100).toFixed(1)
+                : 0;
 
         const [recentApplications,
             upcomingFollowUps] = await Promise.all([
@@ -123,7 +126,7 @@ export const getDashboardData = asyncHandler(
                 Application.find({
                     user: req.user._id,
                     followUpDate: {
-                        $gte: new Date(),
+                        $gte: now,
                     },
                 })
                     .sort({ followUpDate: 1 })
@@ -146,10 +149,15 @@ export const getDashboardData = asyncHandler(
                     },
                 },
                 {
+                    $sort: {
+                        count: -1,
+                    },
+                },
+                {
                     $project: {
                         _id: 0,
                         status: "$_id",
-                        count: 3,
+                        count: 1,
                     },
                 },
             ]);
@@ -163,6 +171,7 @@ export const getDashboardData = asyncHandler(
                 offers,
                 highPriority,
                 offerRate,
+                interviewRate,
                 followUps
             },
 
