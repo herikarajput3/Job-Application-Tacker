@@ -4,6 +4,100 @@ import Application from "../models/Application.js";
 export const getDashboardData = asyncHandler(
     async (req, res) => {
         const now = new Date();
+
+        const sixMonthsAgo = new Date();
+
+        sixMonthsAgo.setMonth(
+            sixMonthsAgo.getMonth() - 5 // we add 5 because we want to include the current month
+        );
+
+        const monthlyTrend =
+            await Application.aggregate([
+                {
+                    $match: {
+                        user: req.user._id,
+                        dateApplied: {
+                            $gte: sixMonthsAgo,
+                        },
+                    },
+                },
+
+                {
+                    $group: {
+                        _id: {
+                            year: {
+                                $year: "$dateApplied",
+                            },
+
+                            month: {
+                                $month: "$dateApplied",
+                            },
+                        },
+
+                        applications: {
+                            $sum: 1,
+                        },
+                    },
+                },
+
+                {
+                    $sort: {
+                        "_id.year": 1,
+                        "_id.month": 1,
+                    },
+                },
+            ]);
+
+        const monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ];
+
+        const trendMap = new Map();
+
+        monthlyTrend.forEach((item) => {
+            trendMap.set(
+                `${item._id.year}-${item._id.month}`,
+                item.applications
+            );
+        });
+        const formattedTrend = [];
+
+        for (let i = 5; i >= 0; i--) {
+
+            const date = new Date();
+
+            date.setMonth(
+                date.getMonth() - i
+            );
+
+            const monthNumber =
+                date.getMonth() + 1;
+
+            formattedTrend.push({
+                month:
+                    monthNames[
+                    monthNumber - 1
+                    ],
+
+                applications:
+                    trendMap.get(
+                        monthNumber
+                    ) || 0,
+            });
+
+        }
+
         const stats = await Application.aggregate([
             {
                 $match: {
@@ -179,7 +273,9 @@ export const getDashboardData = asyncHandler(
 
             upcomingFollowUps,
 
-            statusDistribution
+            statusDistribution,
+
+            monthlyTrend: formattedTrend,
         });
 
     }
