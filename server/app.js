@@ -11,18 +11,42 @@ if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
 
-const allowedOrigin =
-    process.env.NODE_ENV === "production"
-        ? process.env.CLIENT_URL
-        : "http://localhost:5173";
+// const allowedOrigin =
+//     process.env.NODE_ENV === "production"
+//         ? process.env.CLIENT_URL
+//         : "http://localhost:5173";
 
-// Middleware
+// // Middleware
+// app.use(
+//     cors({
+//         origin: allowedOrigin,
+//         credentials: true,
+//     })
+// );
+
+const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.CLIENT_URL,
+];
+
 app.use(
     cors({
-        origin: allowedOrigin,
+        origin: (origin, callback) => {
+            if (
+                !origin ||
+                allowedOrigins.includes(origin)
+            ) {
+                callback(null, true);
+            } else {
+                callback(
+                    new Error("CORS blocked")
+                );
+            }
+        },
         credentials: true,
     })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

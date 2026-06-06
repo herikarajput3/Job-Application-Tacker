@@ -21,6 +21,8 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [recentApplications, setRecentApplications] = useState([]);
   const [upcomingFollowUps, setUpcomingFollowUps] = useState([]);
+  const [statusDistribution, setStatusDistribution] = useState([]);
+  const [monthlyTrend, setMonthlyTrend] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -94,6 +96,12 @@ const Dashboard = () => {
       );
       setUpcomingFollowUps(
         response.data.upcomingFollowUps
+      );
+      setStatusDistribution(
+        response.data.statusDistribution
+      );
+      setMonthlyTrend(
+        response.data.monthlyTrend
       );
       setLoading(false);
     } catch (error) {
@@ -302,6 +310,18 @@ const Dashboard = () => {
               ring: "ring-1 ring-red-200"
             }}
           />
+
+        </div>
+
+        {/* ========================================= */}
+        {/* ANALYTICS SECTION */}
+        {/* ========================================= */}
+
+        <div className="grid lg:grid-cols-2 gap-6 mt-8">
+
+          Status Distribution Card
+
+          Monthly Trend Card
 
         </div>
 
