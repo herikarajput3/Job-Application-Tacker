@@ -117,7 +117,7 @@ const Dashboard = () => {
       );
 
     } catch (error) {
-      
+
       console.error("Error fetching applications", error);
 
     } finally {
@@ -144,7 +144,7 @@ const Dashboard = () => {
 
     <div className="min-h-screen bg-[#f8fafc]">
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
         {isEmptyDashboard ? (
 
@@ -207,7 +207,7 @@ const Dashboard = () => {
 
                   {/* Quick Metrics */}
 
-                  <div className="flex flex-wrap gap-10 mt-10">
+                  <div className="grid grid-cols-3 gap-6 mt-10">
 
                     <div>
                       <p className="text-indigo-200 text-sm">
@@ -287,7 +287,9 @@ const Dashboard = () => {
 
                       <div
                         key={app._id}
-                        className="flex justify-between items-center"
+                        className="flex flex-col
+sm:flex-row
+gap-3"
                       >
 
                         <div>
@@ -398,7 +400,11 @@ const Dashboard = () => {
 
             <div className="mt-8 bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
 
-              <div className="flex justify-between items-center mb-5">
+              <div className="flex flex-col
+  sm:flex-row
+  sm:items-center
+  justify-between
+  gap-3 mb-5">
 
                 <div>
 
@@ -440,10 +446,23 @@ const Dashboard = () => {
                     <div
                       key={app._id}
                       onClick={() => navigate(`/applications/${app._id}`)}
-                      className="flex justify-between items-center p-4 rounded-2xl border border-transparent hover:border-gray-200 hover:bg-gray-50 cursor-pointer transition-all duration-200"
+                      className="
+flex flex-col
+sm:flex-row
+sm:items-center
+justify-between
+gap-3
+p-4
+rounded-2xl
+border border-transparent
+hover:border-gray-200
+hover:bg-gray-50
+cursor-pointer
+transition-all duration-200
+"
                     >
 
-                      <div>
+                      <div className='min-w-0'>
 
                         <p className="font-semibold text-gray-900">
                           {app.role}
@@ -457,10 +476,17 @@ const Dashboard = () => {
 
                       <span
                         className={`
-                      inline-flex px-3 py-1 rounded-full text-xs font-medium
-                      ${statusStyle[app.status]?.bg}
-                      ${statusStyle[app.status]?.text}
-                    `}
+        inline-flex
+        self-start
+        sm:self-auto
+        px-3 py-1
+        rounded-full
+        text-xs
+        font-medium
+        whitespace-nowrap
+        ${statusStyle[app.status]?.bg}
+        ${statusStyle[app.status]?.text}
+    `}
                       >
                         {app.status}
                       </span>
