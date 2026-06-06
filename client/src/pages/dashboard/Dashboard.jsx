@@ -121,313 +121,347 @@ const Dashboard = () => {
     fetchApplications();
   }, []);
 
+  const isEmptyDashboard = total === 0;
   return (
 
     <div className="min-h-screen bg-[#f8fafc]">
 
       <div className="max-w-7xl mx-auto px-6 py-8">
 
-        {/* HERO SECTION */}
+        {isEmptyDashboard ? (
 
-        <div className="grid lg:grid-cols-[1.6fr_1fr] gap-6 mb-8">
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-12 text-center">
 
-          {/* LEFT HERO */}
+            <div className="max-w-md mx-auto">
 
-          <div className="relative overflow-hidden bg-linear-to-br from-indigo-600 to-purple-600 rounded-3xl p-8 text-white">
-
-            {/* Glow */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-
-            <div className="relative z-10">
-
-              <p className="text-indigo-100 text-sm font-medium tracking-wide">
-                JOB SEARCH DASHBOARD
-              </p>
-
-              <h1 className="text-3xl md:text-4xl font-bold mt-4 leading-tight">
-                Welcome back, {user.name} 👋
-              </h1>
-
-              <p className="mt-4 text-indigo-100 max-w-lg leading-relaxed">
-                Track applications, manage interviews,
-                and stay organized throughout your job search journey.
-              </p>
-
-              {/* Quick Metrics */}
-
-              <div className="flex flex-wrap gap-10 mt-10">
-
-                <div>
-                  <p className="text-indigo-200 text-sm">
-                    Applications
-                  </p>
-
-                  <h2 className="text-3xl font-bold mt-1">
-                    {total}
-                  </h2>
-                </div>
-
-                <div>
-                  <p className="text-indigo-200 text-sm">
-                    Interviews
-                  </p>
-
-                  <h2 className="text-3xl font-bold mt-1">
-                    {interviews}
-                  </h2>
-                </div>
-
-                <div>
-                  <p className="text-indigo-200 text-sm">
-                    Offer Rate
-                  </p>
-
-                  <h2 className="text-3xl font-bold mt-1">
-                    {offerRate}%
-                  </h2>
-                </div>
-
+              <div className="w-20 h-20 mx-auto rounded-3xl bg-indigo-100 flex items-center justify-center text-3xl mb-6">
+                💼
               </div>
+
+              <h2 className="text-3xl font-bold text-gray-900">
+                Welcome to JobTracker
+              </h2>
+
+              <p className="mt-4 text-gray-500 leading-relaxed">
+                Start tracking your applications, interviews,
+                offers and follow-ups to gain valuable insights
+                into your job search journey.
+              </p>
+
+              <Link
+                to="/applications/new"
+                className="inline-flex mt-8 px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition"
+              >
+                Add First Application
+              </Link>
 
             </div>
 
           </div>
 
-          {/* RIGHT SIDE CARD */}
+        ) : (
+          <>
+            {/* HERO SECTION */}
 
-          <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+            <div className="grid lg:grid-cols-[1.6fr_1fr] gap-6 mb-8">
 
-            <div className="flex items-center justify-between">
+              {/* LEFT HERO */}
 
-              <div>
+              <div className="relative overflow-hidden bg-linear-to-br from-indigo-600 to-purple-600 rounded-3xl p-8 text-white">
 
-                <p className="text-sm text-gray-500">
-                  Upcoming Follow-Ups
-                </p>
+                {/* Glow */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-2">
-                  {followUps}
-                </h2>
+                <div className="relative z-10">
 
-              </div>
-
-              <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shadow-sm">
-                <FaClock />
-              </div>
-
-            </div>
-
-            <div className="mt-8 space-y-4">
-
-              {upcomingFollowUps.length === 0 ? (
-
-                <div className="border border-dashed border-gray-200 rounded-2xl p-6 text-center">
-
-                  <p className="text-sm text-gray-400">
-                    No upcoming follow-ups
+                  <p className="text-indigo-100 text-sm font-medium tracking-wide">
+                    JOB SEARCH DASHBOARD
                   </p>
+
+                  <h1 className="text-3xl md:text-4xl font-bold mt-4 leading-tight">
+                    Welcome back, {user.name} 👋
+                  </h1>
+
+                  <p className="mt-4 text-indigo-100 max-w-lg leading-relaxed">
+                    Track applications, manage interviews,
+                    and stay organized throughout your job search journey.
+                  </p>
+
+                  {/* Quick Metrics */}
+
+                  <div className="flex flex-wrap gap-10 mt-10">
+
+                    <div>
+                      <p className="text-indigo-200 text-sm">
+                        Applications
+                      </p>
+
+                      <h2 className="text-3xl font-bold mt-1">
+                        {total}
+                      </h2>
+                    </div>
+
+                    <div>
+                      <p className="text-indigo-200 text-sm">
+                        Interviews
+                      </p>
+
+                      <h2 className="text-3xl font-bold mt-1">
+                        {interviews}
+                      </h2>
+                    </div>
+
+                    <div>
+                      <p className="text-indigo-200 text-sm">
+                        Offer Rate
+                      </p>
+
+                      <h2 className="text-3xl font-bold mt-1">
+                        {offerRate}%
+                      </h2>
+                    </div>
+
+                  </div>
 
                 </div>
 
-              ) : (
+              </div>
 
-                upcomingFollowUps.map((app) => (
+              {/* RIGHT SIDE CARD */}
 
-                  <div
-                    key={app._id}
-                    className="flex justify-between items-center"
-                  >
+              <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
 
-                    <div>
+                <div className="flex items-center justify-between">
 
-                      <p className="font-medium text-gray-800">
-                        {app.company}
-                      </p>
+                  <div>
 
-                      <p className="text-sm text-gray-500">
-                        {app.role}
+                    <p className="text-sm text-gray-500">
+                      Upcoming Follow-Ups
+                    </p>
+
+                    <h2 className="text-3xl font-bold text-gray-900 mt-2">
+                      {followUps}
+                    </h2>
+
+                  </div>
+
+                  <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shadow-sm">
+                    <FaClock />
+                  </div>
+
+                </div>
+
+                <div className="mt-8 space-y-4">
+
+                  {upcomingFollowUps.length === 0 ? (
+
+                    <div className="border border-dashed border-gray-200 rounded-2xl p-6 text-center">
+
+                      <p className="text-sm text-gray-400">
+                        No upcoming follow-ups
                       </p>
 
                     </div>
 
-                    <p className="text-xs text-gray-400">
-                      {new Date(app.followUpDate).toLocaleDateString()}
-                    </p>
+                  ) : (
 
-                  </div>
+                    upcomingFollowUps.map((app) => (
 
-                ))
+                      <div
+                        key={app._id}
+                        className="flex justify-between items-center"
+                      >
 
-              )}
+                        <div>
+
+                          <p className="font-medium text-gray-800">
+                            {app.company}
+                          </p>
+
+                          <p className="text-sm text-gray-500">
+                            {app.role}
+                          </p>
+
+                        </div>
+
+                        <p className="text-xs text-gray-400">
+                          {new Date(app.followUpDate).toLocaleDateString()}
+                        </p>
+
+                      </div>
+
+                    ))
+
+                  )}
+
+                </div>
+
+              </div>
+            </div>
+
+            {/* ========================================= */}
+            {/* STATS */}
+            {/* ========================================= */}
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+              <StatCard
+                title="Applications"
+                value={total}
+                icon={<FaBriefcase />}
+                color={{
+                  bg: "bg-blue-100",
+                  icon: "text-blue-600",
+                  ring: "ring-1 ring-blue-200"
+                }}
+              />
+
+              <StatCard
+                title="Interviews"
+                value={interviews}
+                icon={<FaUserTie />}
+                color={{
+                  bg: "bg-yellow-100",
+                  icon: "text-yellow-700",
+                  ring: "ring-1 ring-yellow-200"
+                }}
+              />
+
+              <StatCard
+                title="Offers"
+                value={offers}
+                icon={<FaAward />}
+                color={{
+                  bg: "bg-green-100",
+                  icon: "text-green-600",
+                  ring: "ring-1 ring-green-200"
+                }}
+              />
+
+              <StatCard
+                title="High Priority"
+                value={highPriority}
+                icon={<FaFire />}
+                color={{
+                  bg: "bg-red-100",
+                  icon: "text-red-600",
+                  ring: "ring-1 ring-red-200"
+                }}
+              />
 
             </div>
 
-          </div>
+            {/* ========================================= */}
+            {/* ANALYTICS SECTION */}
+            {/* ========================================= */}
 
-        </div>
+            <div className="grid lg:grid-cols-2 gap-6 mt-8">
 
-        {/* ========================================= */}
-        {/* STATS */}
-        {/* ========================================= */}
+              <StatusDistributionChart
+                data={statusDistribution}
+              />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
-          <StatCard
-            title="Applications"
-            value={total}
-            icon={<FaBriefcase />}
-            color={{
-              bg: "bg-blue-100",
-              icon: "text-blue-600",
-              ring: "ring-1 ring-blue-200"
-            }}
-          />
-
-          <StatCard
-            title="Interviews"
-            value={interviews}
-            icon={<FaUserTie />}
-            color={{
-              bg: "bg-yellow-100",
-              icon: "text-yellow-700",
-              ring: "ring-1 ring-yellow-200"
-            }}
-          />
-
-          <StatCard
-            title="Offers"
-            value={offers}
-            icon={<FaAward />}
-            color={{
-              bg: "bg-green-100",
-              icon: "text-green-600",
-              ring: "ring-1 ring-green-200"
-            }}
-          />
-
-          <StatCard
-            title="High Priority"
-            value={highPriority}
-            icon={<FaFire />}
-            color={{
-              bg: "bg-red-100",
-              icon: "text-red-600",
-              ring: "ring-1 ring-red-200"
-            }}
-          />
-
-        </div>
-
-        {/* ========================================= */}
-        {/* ANALYTICS SECTION */}
-        {/* ========================================= */}
-
-        <div className="grid lg:grid-cols-2 gap-6 mt-8">
-
-          <StatusDistributionChart
-            data={statusDistribution}
-          />
-
-          <MonthlyTrendChart
-            data={monthlyTrend}
-          />
-
-        </div>
-
-        {/* ACTION CENTER */}
-
-        <ActionCenter
-          highPriority={highPriority}
-          followUps={followUps}
-          overdueFollowUps={overdueFollowUps}
-          interviews={interviews}
-        />
-
-        {/* RECENT APPLICATIONS */}
-
-        <div className="mt-8 bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-
-          <div className="flex justify-between items-center mb-5">
-
-            <div>
-
-              <h2 className="text-xl font-semibold text-gray-900">
-                Recent Applications
-              </h2>
-
-              <p className="text-sm text-gray-500 mt-1">
-                Latest activity from your applications
-              </p>
+              <MonthlyTrendChart
+                data={monthlyTrend}
+              />
 
             </div>
 
-            <Link
-              to="/applications"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition"
-            >
-              View All
-            </Link>
+            {/* ACTION CENTER */}
 
-          </div>
+            <ActionCenter
+              highPriority={highPriority}
+              followUps={followUps}
+              overdueFollowUps={overdueFollowUps}
+              interviews={interviews}
+            />
 
-          <div className="space-y-3">
+            {/* RECENT APPLICATIONS */}
 
-            {recentApplications.length === 0 ? (
+            <div className="mt-8 bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
 
-              <div className="border border-dashed border-gray-200 rounded-2xl p-10 text-center">
+              <div className="flex justify-between items-center mb-5">
 
-                <p className="text-gray-400">
-                  No applications added yet
-                </p>
+                <div>
+
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Recent Applications
+                  </h2>
+
+                  <p className="text-sm text-gray-500 mt-1">
+                    Latest activity from your applications
+                  </p>
+
+                </div>
+
+                <Link
+                  to="/applications"
+                  className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition"
+                >
+                  View All
+                </Link>
 
               </div>
 
-            ) : (
+              <div className="space-y-3">
 
-              recentApplications.map((app) => (
+                {recentApplications.length === 0 ? (
 
-                <div
-                  key={app._id}
-                  onClick={() => navigate(`/applications/${app._id}`)}
-                  className="flex justify-between items-center p-4 rounded-2xl border border-transparent hover:border-gray-200 hover:bg-gray-50 cursor-pointer transition-all duration-200"
-                >
+                  <div className="border border-dashed border-gray-200 rounded-2xl p-10 text-center">
 
-                  <div>
-
-                    <p className="font-semibold text-gray-900">
-                      {app.role}
-                    </p>
-
-                    <p className="text-sm text-gray-500 mt-1">
-                      {app.company}
+                    <p className="text-gray-400">
+                      No applications added yet
                     </p>
 
                   </div>
 
-                  <span
-                    className={`
+                ) : (
+
+                  recentApplications.map((app) => (
+
+                    <div
+                      key={app._id}
+                      onClick={() => navigate(`/applications/${app._id}`)}
+                      className="flex justify-between items-center p-4 rounded-2xl border border-transparent hover:border-gray-200 hover:bg-gray-50 cursor-pointer transition-all duration-200"
+                    >
+
+                      <div>
+
+                        <p className="font-semibold text-gray-900">
+                          {app.role}
+                        </p>
+
+                        <p className="text-sm text-gray-500 mt-1">
+                          {app.company}
+                        </p>
+
+                      </div>
+
+                      <span
+                        className={`
                       inline-flex px-3 py-1 rounded-full text-xs font-medium
                       ${statusStyle[app.status]?.bg}
                       ${statusStyle[app.status]?.text}
                     `}
-                  >
-                    {app.status}
-                  </span>
+                      >
+                        {app.status}
+                      </span>
 
-                </div>
+                    </div>
 
-              ))
+                  ))
 
-            )}
+                )}
 
-          </div>
+              </div>
 
-        </div>
+            </div>
+          </>
+        )}
 
       </div>
 
-    </div>
-
+    </div >
   );
 };
 
