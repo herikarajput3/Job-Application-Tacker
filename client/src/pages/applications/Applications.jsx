@@ -20,16 +20,20 @@ const Applications = () => {
 
 
     const statusStyle = {
+        Saved: "bg-gray-100 text-gray-600",
         Applied: "bg-blue-100 text-blue-600",
-        Interviewed: "bg-yellow-100 text-yellow-700",
+        Assessment: "bg-purple-100 text-purple-700",
+        "Interview Scheduled": "bg-yellow-100 text-yellow-700",
+        Interviewed: "bg-orange-100 text-orange-700",
         Offer: "bg-green-100 text-green-600",
-        Rejected: "bg-red-100 text-red-600"
+        Rejected: "bg-red-100 text-red-600",
+        Ghosted: "bg-neutral-100 text-neutral-700",
     }
 
     const fetchApplications = async () => {
         try {
             setLoading(true);
-                const response = await API.get(`/applications?search=${searchTerm}&status=${statusFilter}&page=${page}&limit=5`);
+            const response = await API.get(`/applications?search=${searchTerm}&status=${statusFilter}&page=${page}&limit=5`);
             setApplications(response.data.data);
             setPagination(response.data.pagination);
         } catch (error) {
@@ -175,7 +179,7 @@ const Applications = () => {
                         await fetchApplications();
                         setIsModalOpen(false);
                     }}
-                    onUpdate={async()=>{
+                    onUpdate={async () => {
                         await fetchApplications();
                         setIsModalOpen(false);
                         setEditingApp(null);
