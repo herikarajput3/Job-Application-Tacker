@@ -41,6 +41,8 @@ const Dashboard = () => {
 
   const followUps = stats?.followUps || 0;
 
+  const overdueFollowUps = stats?.overdueFollowUps || 0;
+
   const offerRate = stats?.offerRate || 0;
 
   // Status UI Colors
@@ -337,6 +339,7 @@ const Dashboard = () => {
         <ActionCenter
           highPriority={highPriority}
           followUps={followUps}
+          overdueFollowUps={overdueFollowUps}
           interviews={interviews}
         />
 

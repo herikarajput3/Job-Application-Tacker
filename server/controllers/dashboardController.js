@@ -178,6 +178,30 @@ export const getDashboardData = asyncHandler(
                             ],
                         },
                     },
+                    overdueFollowUps: {
+                        $sum: {
+                            $cond: [
+                                {
+                                    $and: [
+                                        {
+                                            $lt: [
+                                                "$followUpDate",
+                                                now,
+                                            ],
+                                        },
+                                        {
+                                            $ne: [
+                                                "$followUpDate",
+                                                null,
+                                            ],
+                                        },
+                                    ],
+                                },
+                                1,
+                                0,
+                            ],
+                        },
+                    },
                 },
             },
         ]);
@@ -188,6 +212,7 @@ export const getDashboardData = asyncHandler(
             interviews: 0,
             highPriority: 0,
             followUps: 0,
+            overdueFollowUps: 0,
         };
 
         const total =
@@ -204,6 +229,9 @@ export const getDashboardData = asyncHandler(
 
         const followUps =
             dashboardStats.followUps;
+
+        const overdueFollowUps =
+            dashboardStats.overdueFollowUps;
 
         const offerRate =
             total > 0
@@ -271,7 +299,8 @@ export const getDashboardData = asyncHandler(
                 highPriority,
                 offerRate,
                 interviewRate,
-                followUps
+                followUps,
+                overdueFollowUps,
             },
 
             recentApplications,
