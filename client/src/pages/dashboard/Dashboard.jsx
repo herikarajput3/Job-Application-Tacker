@@ -15,6 +15,8 @@ import {
 } from 'react-router-dom';
 import API from '../../service/api';
 import { useAuth } from '../../context/AuthContext';
+import MonthlyTrendChart from '../../components/dashboard/MonthlyTrendChart';
+import StatusDistributionChart from '../../components/dashboard/StatusDistributionChart';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -319,12 +321,15 @@ const Dashboard = () => {
 
         <div className="grid lg:grid-cols-2 gap-6 mt-8">
 
-          Status Distribution Card
+          <StatusDistributionChart
+            data={statusDistribution}
+          />
 
-          Monthly Trend Card
+          <MonthlyTrendChart
+            data={monthlyTrend}
+          />
 
         </div>
-
         {/* RECENT APPLICATIONS */}
 
         <div className="mt-8 bg-white rounded-3xl border border-gray-100 shadow-sm p-6">

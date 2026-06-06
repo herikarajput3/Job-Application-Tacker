@@ -47,7 +47,6 @@ export const getDashboardData = asyncHandler(
                     },
                 },
             ]);
-
         const monthNames = [
             "Jan",
             "Feb",
@@ -84,6 +83,12 @@ export const getDashboardData = asyncHandler(
             const monthNumber =
                 date.getMonth() + 1;
 
+            const year =
+                date.getFullYear();
+
+            const key =
+                `${year}-${monthNumber}`;
+
             formattedTrend.push({
                 month:
                     monthNames[
@@ -92,7 +97,7 @@ export const getDashboardData = asyncHandler(
 
                 applications:
                     trendMap.get(
-                        monthNumber
+                        key
                     ) || 0,
             });
 
