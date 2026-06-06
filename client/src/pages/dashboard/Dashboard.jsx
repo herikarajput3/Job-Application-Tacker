@@ -17,6 +17,7 @@ import API from '../../service/api';
 import { useAuth } from '../../context/AuthContext';
 import MonthlyTrendChart from '../../components/dashboard/MonthlyTrendChart';
 import StatusDistributionChart from '../../components/dashboard/StatusDistributionChart';
+import ActionCenter from '../../components/dashboard/ActionCenter';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -330,6 +331,15 @@ const Dashboard = () => {
           />
 
         </div>
+
+        {/* ACTION CENTER */}
+
+        <ActionCenter
+          highPriority={highPriority}
+          followUps={followUps}
+          interviews={interviews}
+        />
+
         {/* RECENT APPLICATIONS */}
 
         <div className="mt-8 bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
