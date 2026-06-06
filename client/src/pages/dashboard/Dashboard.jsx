@@ -18,6 +18,7 @@ import { useAuth } from '../../context/AuthContext';
 import MonthlyTrendChart from '../../components/dashboard/MonthlyTrendChart';
 import StatusDistributionChart from '../../components/dashboard/StatusDistributionChart';
 import ActionCenter from '../../components/dashboard/ActionCenter';
+import DashboardSkeleton from '../../components/dashboard/DashboardSkeleton';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -94,24 +95,31 @@ const Dashboard = () => {
   const fetchApplications = async () => {
     try {
       setLoading(true);
+
       const response = await API.get("/dashboard");
+
       setStats(response.data.stats);
+
       setRecentApplications(
         response.data.recentApplications
       );
+
       setUpcomingFollowUps(
         response.data.upcomingFollowUps
       );
+
       setStatusDistribution(
         response.data.statusDistribution
       );
+
       setMonthlyTrend(
         response.data.monthlyTrend
       );
-      setLoading(false);
+
     } catch (error) {
+      
       console.error("Error fetching applications", error);
-      setLoading(false);
+
     } finally {
       setLoading(false);
     }
@@ -122,6 +130,16 @@ const Dashboard = () => {
   }, []);
 
   const isEmptyDashboard = total === 0;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc]">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <DashboardSkeleton />
+        </div>
+      </div>
+    );
+  }
   return (
 
     <div className="min-h-screen bg-[#f8fafc]">
@@ -149,7 +167,7 @@ const Dashboard = () => {
               </p>
 
               <Link
-                to="/applications/new"
+                to="/applications"
                 className="inline-flex mt-8 px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition"
               >
                 Add First Application
