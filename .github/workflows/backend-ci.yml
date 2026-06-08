@@ -30,4 +30,7 @@ jobs:
         run: npm install
 
       - name: Run Tests
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
         run: npm test
