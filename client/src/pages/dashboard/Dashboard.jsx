@@ -28,6 +28,7 @@ const Dashboard = () => {
   const [statusDistribution, setStatusDistribution] = useState([]);
   const [monthlyTrend, setMonthlyTrend] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   // Dashboard Metrics
@@ -95,6 +96,7 @@ const Dashboard = () => {
   const fetchApplications = async () => {
     try {
       setLoading(true);
+      setError(null);
 
       const response = await API.get("/dashboard");
 
@@ -119,6 +121,9 @@ const Dashboard = () => {
     } catch (error) {
 
       console.error("Error fetching applications", error);
+      setError(
+        "Unable to load dashboard data."
+      );
 
     } finally {
       setLoading(false);
@@ -130,6 +135,42 @@ const Dashboard = () => {
   }, []);
 
   const isEmptyDashboard = total === 0;
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc]">
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+          <div className="bg-white rounded-3xl border border-red-100 shadow-sm p-12 text-center">
+
+            <div className="text-5xl mb-4">
+              ⚠️
+            </div>
+
+            <h2 className="text-2xl font-bold text-gray-900">
+              Unable to Load Dashboard
+            </h2>
+
+            <p className="text-gray-500 mt-3">
+              Something went wrong while loading
+              your dashboard data.
+            </p>
+
+            <button
+              onClick={fetchDashboardData}
+              className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
+            >
+              Try Again
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    );
+  }
 
   if (loading) {
     return (
