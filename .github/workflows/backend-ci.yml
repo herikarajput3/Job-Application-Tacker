@@ -34,9 +34,18 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
         run: |
-          echo "JWT_SECRET exists? -> $([ -n "$JWT_SECRET" ] && echo YES || echo NO)"
-          echo "JWT_EXPIRES_IN exists? -> $([ -n "$JWT_EXPIRES_IN" ] && echo YES || echo NO)"
+          if [ -n "$JWT_SECRET" ]; then
+            echo "JWT_SECRET=YES"
+          else
+            echo "JWT_SECRET=NO"
+          fi
 
+          if [ -n "$JWT_EXPIRES_IN" ]; then
+            echo "JWT_EXPIRES_IN=YES"
+          else
+            echo "JWT_EXPIRES_IN=NO"
+          fi
+          
       - name: Run Tests
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
