@@ -30,15 +30,15 @@ jobs:
         run: npm install
 
       - name: Debug Environment
-      env:
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
-      run: |
-        echo "JWT_SECRET exists? -> $([ -n "$JWT_SECRET" ] && echo YES || echo NO)"
-        echo "JWT_EXPIRES_IN exists? -> $([ -n "$JWT_EXPIRES_IN" ] && echo YES || echo NO)"
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+        run: |
+          echo "JWT_SECRET exists? -> $([ -n "$JWT_SECRET" ] && echo YES || echo NO)"
+          echo "JWT_EXPIRES_IN exists? -> $([ -n "$JWT_EXPIRES_IN" ] && echo YES || echo NO)"
 
       - name: Run Tests
-      env:
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
-      run: npm test
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+        run: npm test
