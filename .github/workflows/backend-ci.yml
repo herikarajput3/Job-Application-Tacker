@@ -18,34 +18,14 @@ jobs:
         working-directory: server
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install Dependencies
-        run: npm install
+      - run: npm install
 
-      - name: Debug Environment
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
-        run: |
-          if [ -n "$JWT_SECRET" ]; then
-            echo "JWT_SECRET=YES"
-          else
-            echo "JWT_SECRET=NO"
-          fi
-
-          if [ -n "$JWT_EXPIRES_IN" ]; then
-            echo "JWT_EXPIRES_IN=YES"
-          else
-            echo "JWT_EXPIRES_IN=NO"
-          fi
-          
       - name: Run Tests
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
