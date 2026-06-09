@@ -13,14 +13,21 @@ jobs:
         working-directory: server
 
     steps:
-      - uses: actions/checkout@v4
+      # Download repository code
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      # Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - run: npm install
+      # Install dependencies using package-lock.json
+      - name: Install Dependencies
+        run: npm ci
 
+      # Run all backend tests
       - name: Run Tests
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
