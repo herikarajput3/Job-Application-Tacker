@@ -1,7 +1,10 @@
 import User from "../models/User.js"
 import asyncHandler from "../middleware/async.js"
 import ErrorResponse from "../utils/errorResponse.js"
-import generateToken from "../utils/jwt.js";
+import {
+    generateAccessToken,
+    generateRefreshToken,
+} from "../utils/jwt.js";
 
 export const register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -17,12 +20,18 @@ export const register = asyncHandler(async (req, res) => {
     const user = await User.create({ name, email, password });
     console.log(user, "user created");
     // Generate token
-    const token = generateToken(user._id);
-    console.log(token, "token generated");
+    const accessToken =
+        generateAccessToken(user._id);
+    const refreshToken =
+        generateRefreshToken(user._id);
+
+    // Save refresh token
+    user.refreshToken = refreshToken;
+    await user.save();
     res.status(201).json({
         success: true,
         message: "User created successfully",
-        token,
+        token: accessToken,
         user: {
             id: user._id,
             name: user.name,
@@ -53,12 +62,19 @@ export const login = asyncHandler(async (req, res) => {
     }
 
     // Generate token
-    const token = generateToken(user._id);
+    const accessToken =
+        generateAccessToken(user._id);
+
+    const refreshToken =
+        generateRefreshToken(user._id);
+
+    user.refreshToken = refreshToken;
+    await user.save();
 
     res.status(200).json({
         success: true,
         message: "User logged in successfully",
-        token,
+        token: accessToken,
         user: {
             id: user._id,
             name: user.name,
