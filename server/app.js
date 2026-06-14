@@ -4,6 +4,7 @@ import applicationRoutes from './routes/applicationRoutes.js'
 import errorMiddleware from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js'
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.use("/api/applications", applicationRoutes);
 app.use("/api/auth", authRoutes);

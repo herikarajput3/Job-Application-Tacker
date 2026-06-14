@@ -5,6 +5,9 @@ import {
     generateAccessToken,
     generateRefreshToken,
 } from "../utils/jwt.js";
+import {
+    refreshCookieOptions,
+} from "../utils/cookieOptions.js";
 
 export const register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -27,7 +30,13 @@ export const register = asyncHandler(async (req, res) => {
 
     // Save refresh token
     user.refreshToken = refreshToken;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
+    res.cookie(
+        "refreshToken",
+        refreshToken,
+        refreshCookieOptions
+    );
+
     res.status(201).json({
         success: true,
         message: "User created successfully",
@@ -69,8 +78,14 @@ export const login = asyncHandler(async (req, res) => {
         generateRefreshToken(user._id);
 
     user.refreshToken = refreshToken;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
+    res.cookie(
+        "refreshToken",
+        refreshToken,
+        refreshCookieOptions
+    );
+    
     res.status(200).json({
         success: true,
         message: "User logged in successfully",
