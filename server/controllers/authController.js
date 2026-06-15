@@ -8,6 +8,7 @@ import {
 import {
     refreshCookieOptions,
 } from "../utils/cookieOptions.js";
+import jwt from "jsonwebtoken";
 
 export const register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -85,7 +86,7 @@ export const login = asyncHandler(async (req, res) => {
         refreshToken,
         refreshCookieOptions
     );
-    
+
     res.status(200).json({
         success: true,
         message: "User logged in successfully",
@@ -97,6 +98,44 @@ export const login = asyncHandler(async (req, res) => {
         },
     });
 })
+
+export const refreshAccessToken =
+    asyncHandler(async (req, res) => {
+        console.log(req.cookies.refreshToken, "refresh token");
+        const refreshToken =
+            req.cookies.refreshToken;
+        console.log(refreshToken, "refresh token");
+
+        if (!refreshToken) {
+            throw new ErrorResponse(
+                "Refresh token missing",
+                401
+            );
+        }
+
+        const decoded = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET
+        );
+
+        const user = await User.findById(decoded.id);
+
+        if(!user) {
+            throw new ErrorResponse("User not found", 401);
+        }
+
+        if(user.refreshToken !== refreshToken) {
+            throw new ErrorResponse("Invalid refresh token", 401);
+        }
+
+        const accessToken =
+            generateAccessToken(user._id);
+
+        res.status(200).json({
+            success: true,
+            token: accessToken,
+        });
+    });
 
 export const getMe = asyncHandler(
     async (req, res) => {
