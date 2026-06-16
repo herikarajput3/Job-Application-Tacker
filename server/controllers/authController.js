@@ -101,10 +101,8 @@ export const login = asyncHandler(async (req, res) => {
 
 export const refreshAccessToken =
     asyncHandler(async (req, res) => {
-        console.log(req.cookies.refreshToken, "refresh token");
         const refreshToken =
             req.cookies.refreshToken;
-        console.log(refreshToken, "refresh token");
 
         if (!refreshToken) {
             throw new ErrorResponse(
@@ -142,6 +140,45 @@ export const getMe = asyncHandler(
         res.status(200).json({
             success: true,
             user: req.user,
+        });
+
+    }
+);
+
+export const logout = asyncHandler(
+    async (req, res) => {
+
+        const refreshToken =
+            req.cookies.refreshToken;
+
+        if (refreshToken) {
+
+            const user =
+                await User.findOne({
+                    refreshToken,
+                });
+
+            if (user) {
+
+                user.refreshToken = null;
+
+                await user.save({
+                    validateBeforeSave: false,
+                });
+
+            }
+
+        }
+
+        res.clearCookie(
+            "refreshToken",
+            refreshCookieOptions
+        );
+
+        res.status(200).json({
+            success: true,
+            message:
+                "Logged out successfully",
         });
 
     }

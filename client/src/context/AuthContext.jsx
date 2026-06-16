@@ -43,11 +43,11 @@ export const AuthProvider = ({ children }) => {
           "/auth/me"
         );
 
-      setUser(response.data.user);
+        setUser(response.data.user);
 
       } catch (error) {
 
-      console.log(error);
+        console.log(error);
 
         localStorage.removeItem("token");
 
@@ -88,9 +88,28 @@ export const AuthProvider = ({ children }) => {
 
   // Logout
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
+  const logout = async () => {
+
+    try {
+
+      await API.post(
+        "/auth/logout"
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+    } finally {
+
+      localStorage.removeItem(
+        "token"
+      );
+
+      setUser(null);
+
+    }
+
   };
 
   // Load User On App Start
