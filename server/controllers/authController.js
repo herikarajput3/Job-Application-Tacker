@@ -111,23 +111,52 @@ export const refreshAccessToken =
             );
         }
 
-        const decoded = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET
-        );
+        let decoded;
+
+        try {
+
+            decoded = jwt.verify(
+                refreshToken,
+                process.env.JWT_REFRESH_SECRET
+            );
+
+        } catch (error) {
+
+            throw new ErrorResponse(
+                "Invalid refresh token",
+                401
+            );
+
+        }
 
         const user = await User.findById(decoded.id);
 
-        if(!user) {
+        if (!user) {
             throw new ErrorResponse("User not found", 401);
         }
 
-        if(user.refreshToken !== refreshToken) {
+        if (user.refreshToken !== refreshToken) {
             throw new ErrorResponse("Invalid refresh token", 401);
         }
 
         const accessToken =
             generateAccessToken(user._id);
+
+        const newRefreshToken =
+            generateRefreshToken(user._id);
+
+        user.refreshToken =
+            newRefreshToken;
+
+        await user.save({
+            validateBeforeSave: false,
+        });
+
+        res.cookie(
+            "refreshToken",
+            newRefreshToken,
+            refreshCookieOptions
+        );
 
         res.status(200).json({
             success: true,
