@@ -135,8 +135,22 @@ export const refreshAccessToken =
             throw new ErrorResponse("User not found", 401);
         }
 
-        if (user.refreshToken !== refreshToken) {
-            throw new ErrorResponse("Invalid refresh token", 401);
+        if (
+            user.refreshToken !==
+            refreshToken
+        ) {
+
+            user.refreshToken = null;
+
+            await user.save({
+                validateBeforeSave: false,
+            });
+
+            throw new ErrorResponse(
+                "Refresh token reuse detected",
+                401
+            );
+
         }
 
         const accessToken =
