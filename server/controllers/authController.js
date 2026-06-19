@@ -9,6 +9,7 @@ import {
     refreshCookieOptions,
 } from "../utils/cookieOptions.js";
 import jwt from "jsonwebtoken";
+import generateVerificationToken from "../utils/generateVerificationToken.js";
 
 export const register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -18,11 +19,14 @@ export const register = asyncHandler(async (req, res) => {
     if (existingUser) {
         throw new ErrorResponse("User already exists", 400);
     }
-    console.log(existingUser, "existing user");
-
+    const verificationToken = generateVerificationToken();
     // Create user
-    const user = await User.create({ name, email, password });
-    console.log(user, "user created");
+    const user = await User.create({
+        name,
+        email,
+        password,
+        emailVerificationToken: verificationToken,
+    });
     // Generate token
     const accessToken =
         generateAccessToken(user._id);
