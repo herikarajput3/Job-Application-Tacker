@@ -10,6 +10,7 @@ import {
 } from "../utils/cookieOptions.js";
 import jwt from "jsonwebtoken";
 import generateVerificationToken from "../utils/generateVerificationToken.js";
+import sendVerificationEmail from "../utils/sendVerificationEmail.js";
 
 export const register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -27,6 +28,12 @@ export const register = asyncHandler(async (req, res) => {
         password,
         emailVerificationToken: verificationToken,
     });
+
+    await sendVerificationEmail(
+        user.email,
+        verificationToken
+    );
+    
     // Generate token
     const accessToken =
         generateAccessToken(user._id);
