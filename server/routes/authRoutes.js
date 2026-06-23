@@ -1,5 +1,5 @@
 import express from "express";
-import { getMe, login, register, logout, refreshAccessToken } from "../controllers/authController.js";
+import { getMe, login, register, logout, refreshAccessToken, verifyEmail } from "../controllers/authController.js";
 import { protect } from "../middleware/auth.js";
 import { authLimiter } from "../middleware/rateLimiter.js";
 
@@ -14,6 +14,10 @@ router.post(
 router.post(
     "/refresh",
     refreshAccessToken
+);
+router.post(
+    "/verify-email",
+    verifyEmail
 );
 router.get("/me", protect, getMe);
 

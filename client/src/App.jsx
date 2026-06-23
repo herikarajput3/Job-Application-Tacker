@@ -8,6 +8,7 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import VerifyEmail from "./pages/auth/VerifyEmail";
 const App = () => {
   return (
     <Router>
@@ -33,6 +34,11 @@ const App = () => {
               <Login />
             </PublicRoute>
           }
+        />
+
+        <Route
+          path="/verify-email/:token"
+            element={<VerifyEmail />}
         />
 
         <Route

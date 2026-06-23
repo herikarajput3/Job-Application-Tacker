@@ -33,7 +33,7 @@ export const register = asyncHandler(async (req, res) => {
         user.email,
         verificationToken
     );
-    
+
     // Generate token
     const accessToken =
         generateAccessToken(user._id);
@@ -75,6 +75,15 @@ export const login = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ErrorResponse("Invalid credentials", 401);
     }
+
+    // if (!user.isVerified) {
+
+    //     throw new ErrorResponse(
+    //         "Please verify your email before logging in",
+    //         401
+    //     );
+
+    // }
 
     // Check password
     const isMatch = await user.matchPassword(password);
@@ -187,6 +196,52 @@ export const refreshAccessToken =
             success: true,
             token: accessToken,
         });
+    });
+
+export const verifyEmail =
+    asyncHandler(async (req, res) => {
+
+        const { token } = req.body;
+
+        if (!token) {
+
+            throw new ErrorResponse(
+                "Verification token required",
+                400
+            );
+
+        }
+
+        const user =
+            await User.findOne({
+                emailVerificationToken:
+                    token,
+            });
+
+        if (!user) {
+
+            throw new ErrorResponse(
+                "Invalid verification token",
+                400
+            );
+
+        }
+
+        user.isVerified = true;
+
+        user.emailVerificationToken =
+            null;
+
+        await user.save({
+            validateBeforeSave: false,
+        });
+
+        res.status(200).json({
+            success: true,
+            message:
+                "Email verified successfully",
+        });
+
     });
 
 export const getMe = asyncHandler(

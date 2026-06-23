@@ -33,27 +33,42 @@ API.interceptors.response.use(
 
         if (
             error.response?.status === 401 &&
-            !originalRequest._retry
+            !originalRequest._retry &&
+            originalRequest.url !== "/auth/refresh"
         ) {
-            originalRequest._retry = true;
+            try {
 
-            const response =
-                await API.post(
-                    "/auth/refresh"
+                originalRequest._retry = true;
+
+                const response =
+                    await API.post(
+                        "/auth/refresh"
+                    );
+
+                const newAccessToken =
+                    response.data.token;
+
+                localStorage.setItem(
+                    "token",
+                    newAccessToken
                 );
 
-            const newAccessToken =
-                response.data.token;
+                originalRequest.headers.Authorization =
+                    `Bearer ${newAccessToken}`;
 
-            localStorage.setItem(
-                "token",
-                newAccessToken
-            );
+                return API(originalRequest);
 
-            originalRequest.headers.Authorization =
-                `Bearer ${newAccessToken}`;
+            } catch (refreshError) {
 
-            return API(originalRequest);
+                localStorage.removeItem("token");
+
+                window.location.href =
+                    "/login";
+
+                return Promise.reject(
+                    refreshError
+                );
+            }
         }
 
         return Promise.reject(error);
