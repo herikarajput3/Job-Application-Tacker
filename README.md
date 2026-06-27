@@ -217,22 +217,19 @@ Unlike traditional JWT implementations that store tokens in `localStorage`, Refr
 flowchart TD
 
 A[User Login]
-
 A --> B[Validate Credentials]
 
-B --> C[Generate Access Token]
-
-B --> D[Generate Refresh Token]
+B --> C[Issue Access Token]
+B --> D[Issue Refresh Token]
 
 D --> E[Store Refresh Token]
-
 E --> F[HTTP-Only Cookie]
 
-C --> G[Authenticated Requests]
+C --> G[Protected API Requests]
 
 G --> H{Access Token Expired?}
 
-H -->|Yes| I[/auth/refresh]
+H -- Yes --> I[Refresh Session]
 
 I --> J[Validate Refresh Token]
 
