@@ -74,8 +74,8 @@
 
 | Service     | URL                |
 | ----------- | ------------------ |
-| Frontend    | **Add Vercel URL** |
-| Backend API | **Add Render URL** |
+| Frontend    | **https://job-application-tacker-theta.vercel.app/** |
+| Backend API | **https://job-application-tacker-api.onrender.com/** |
 
 ---
 
@@ -386,6 +386,8 @@ CLIENT_URL=http://localhost:5173
 
 RESEND_API_KEY=your_resend_api_key
 ```
+> **Note:** This example is intended for local development.
+> When deploying the application (e.g., on Render), update the environment variables accordingly, such as setting `NODE_ENV=production` and configuring the production `CLIENT_URL`.
 
 ---
 
@@ -546,20 +548,20 @@ See the `LICENSE` file for more information.
 
 ---
 
-# 👨‍💻 Author
+## 👨‍💻 Author
 
 ### Herika Rajput
 
-**Aspiring Full Stack Developer**
+Aspiring Full Stack Developer passionate about building secure, scalable, and production-ready web applications.
 
-I'm passionate about building secure, scalable, and user-friendly web applications while continuously improving my software engineering skills.
+> Open to internship and entry-level Full Stack Developer opportunities.
 
 ### Connect with Me
 
-* 💼 LinkedIn — *Add your profile link*
-* 🌐 Portfolio — *Add your portfolio link*
-* 📧 Email — *Add your email*
-* 🐙 GitHub — *Add your GitHub profile*
+- 💼 **LinkedIn:** [Herika Rajput](https://www.linkedin.com/in/herika-rajput)
+- 🐙 **GitHub:** [@herikarajput3](https://github.com/herikarajput3)
+- 📧 **Email:** herikarajput03@gmail.com
+<!-- * 🌐 Portfolio — *Add your portfolio link* -->
 
 ---
 
